@@ -1,0 +1,45 @@
+{
+    "name": "devgroup/yii2-users-module",
+    "description": "Yii2 users and rbac module",
+    "type": "yii2-extension",
+    "keywords": ["yii2","users","rbac"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/yii2": "^2.0.6",
+        "devgroup/yii2-tag-dependency-helper": "^1.3.0",
+        "devgroup/yii2-data-structure-tools": "dev-master",
+        "devgroup/yii2-admin-utils": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "phpunit/dbunit": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DevGroup\\Users\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DevGroup\\Users\\tests\\": "tests/"
+        }
+    },
+    "config": {
+        "process-timeout": 1800,
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "yii2-extension": {
+            "name": "Users module",
+            "name_ru": "Модуль пользователей",
+            "description_ru": "Модуль пользователей и RBAC для yii2"
+        },
+        "migrationPath": [
+            "src/migrations"
+        ],
+        "configurables": "src/configurables.php",
+        "translationCategory": "users",
+        "bootstrap": "DevGroup\\Users\\Bootstrap"
+    }
+}
