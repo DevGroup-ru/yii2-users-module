@@ -39,10 +39,6 @@ class User extends ActiveRecord implements IdentityInterface
 {
     use TagDependencyTrait;
 
-    const SCENARIO_LOGIN = 'scenario-login';
-    const SCENARIO_REGISTER = 'scenario-register';
-    const SCENARIO_REQUEST_PASSWORD_RECOVERY = 'scenario-request-password-recovery';
-    const SCENARIO_PASSWORD_RESET_FORM = 'scenario-password-reset-form';
     const SCENARIO_PROFILE_UPDATE = 'scenario-profile-update';
 
     const EVENT_BEFORE_REGISTER = 'before-register';
@@ -77,13 +73,18 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function rules()
     {
+        $module = UsersModule::module();
         return [
             [
+                'phone',
+                'safe',
+            ],
+            [
                 [
-                    'phone',
                     'password',
                 ],
                 'safe',
+                'on' => self::SCENARIO_DEFAULT,
             ],
             [
                 'username',
@@ -92,6 +93,24 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'email',
                 'unique',
+            ],
+            'standardEmailRules' => [
+                [
+                    'email',
+                ],
+                'email',
+                'checkDNS' => $module->authorizationScenario()->emailCheckDNS,
+                'enableIDN' => $module->authorizationScenario()->emailEnableIDN,
+                'skipOnEmpty' => true,
+                'on' => self::SCENARIO_PROFILE_UPDATE,
+            ],
+            'trimEmail' =>[
+                [
+                    'email',
+                ],
+                'filter',
+                'filter' => 'trim',
+                'on' => self::SCENARIO_PROFILE_UPDATE,
             ],
             [
                 [
@@ -102,6 +121,24 @@ class User extends ActiveRecord implements IdentityInterface
                 'filter' => 'boolval',
             ],
         ];
+    }
+
+    /** @inheritdoc */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_PROFILE_UPDATE] = [
+            'phone',
+        ];
+
+        if ($this->username_is_temporary) {
+            $scenarios[self::SCENARIO_PROFILE_UPDATE][] = 'username';
+        }
+        if (empty($this->email)) {
+            $scenarios[self::SCENARIO_PROFILE_UPDATE][] = 'email';
+        }
+
+        return $scenarios;
     }
 
     /**

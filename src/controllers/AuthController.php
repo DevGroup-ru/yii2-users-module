@@ -3,13 +3,41 @@
 namespace DevGroup\Users\controllers;
 
 use DevGroup\Users\actions\Login;
+use DevGroup\Users\actions\Logout;
 use DevGroup\Users\actions\Social;
 use DevGroup\Users\actions\Registration;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class AuthController extends Controller
 {
+    /** @inheritdoc */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['logout'],
+                'rules' => [
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    /** @inheritdoc */
     public function actions()
     {
         return [
@@ -21,6 +49,9 @@ class AuthController extends Controller
             ],
             'login' => [
                 'class' => Login::className(),
+            ],
+            'logout' => [
+                'class' => Logout::className(),
             ],
         ];
     }

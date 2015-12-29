@@ -139,6 +139,18 @@ class m151225_140300_base_tables extends Migration
                 ]),
             ]
         );
+        $this->insert(
+            '{{%social_service}}',
+            [
+                'bem_modifier' => 'twitter',
+                'class_name' => 'DevGroup\Users\social\Twitter',
+                'packed_json_params' => \yii\helpers\Json::encode([
+                    'consumerKey' => 'kZ5sQhDkr31tQm0sbif7RJdIh',
+                    'consumerSecret' => 'ZdWn7wcPHcNaLh1QuRrN44MZdW1sjhGzmTVUIigdJRxQRugAMW',
+                ]),
+            ]
+        );
+
 
         $this->insert(
             '{{%social_service_translation}}',
@@ -154,6 +166,22 @@ class m151225_140300_base_tables extends Migration
                 'language_id' => 2,
                 'model_id' => 1,
                 'name' => 'Мордокнига',
+            ]
+        );
+        $this->insert(
+            '{{%social_service_translation}}',
+            [
+                'language_id' => 1,
+                'model_id' => 2,
+                'name' => 'Twitter',
+            ]
+        );
+        $this->insert(
+            '{{%social_service_translation}}',
+            [
+                'language_id' => 2,
+                'model_id' => 2,
+                'name' => 'Свитер',
             ]
         );
 

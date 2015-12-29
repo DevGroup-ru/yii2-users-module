@@ -40,7 +40,7 @@ class Social extends AuthAction
         /** @var \yii\authclient\BaseClient $client */
         $this->socialServiceId = SocialService::classNameToId($client->className());
 
-        if ($this->socialServiceId === null) {
+        if ($this->socialServiceId === 0) {
             throw new ServerErrorHttpException("SocialService unknown");
         }
 

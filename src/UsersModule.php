@@ -29,6 +29,7 @@ class UsersModule extends Module implements BootstrapInterface
             'class' => 'DevGroup\Users\models\LoginForm',
         ],
     ];
+
     public $modelMap = [];
 
     public $authorizationScenario = [
@@ -55,6 +56,17 @@ class UsersModule extends Module implements BootstrapInterface
 
     /** @var bool Enable login and registration through social networks */
     public $enableSocialNetworks = true;
+
+    public $requiredUserAttributes = [
+        'username',
+        'email',
+    ];
+
+    public $recommendedUserAttributes = [
+        'phone',
+    ];
+
+    public $disabledUserAttributes = [];
 
     /**
      * @inheritdoc

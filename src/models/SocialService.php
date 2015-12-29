@@ -105,6 +105,6 @@ class SocialService extends ActiveRecord
                 ])
             );
         }
-        return static::$classNameToId[$className] === null ? null : intval(static::$classNameToId[$className]);
+        return intval(static::$classNameToId[$className]);
     }
 }
