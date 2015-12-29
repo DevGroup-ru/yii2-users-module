@@ -2,6 +2,7 @@
 
 namespace DevGroup\Users\models;
 
+use DevGroup\TagDependencyHelper\CacheableActiveRecord;
 use DevGroup\TagDependencyHelper\TagDependencyTrait;
 use DevGroup\Users\events\RegistrationEvent;
 use DevGroup\Users\helpers\PasswordHelper;
@@ -31,7 +32,7 @@ use yii\web\IdentityInterface;
  * @property string  $activated_at
  * @property string  $last_login_at
  * @property boolean $username_is_temporary If username is temporary and was generated
- * @property UserServie $services
+ * @property UserService $services
  *
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -60,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'CacheableActiveRecord' => [
-                'class' => \DevGroup\TagDependencyHelper\CacheableActiveRecord::className(),
+                'class' => CacheableActiveRecord::className(),
             ],
             'updateTimestamps' => [
                 'class' => TimestampBehavior::className(),
@@ -211,6 +212,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Login user.
+     * @param integer $loginDuration
      * @return bool true if success
      */
     public function login($loginDuration = 0)

@@ -9,6 +9,7 @@ use DevGroup\Users\models\LoginForm;
 use DevGroup\Users\models\RegistrationForm;
 use DevGroup\Users\UsersModule;
 use Yii;
+use yii\authclient\BaseClient;
 use yii\base\Object;
 use yii\caching\TagDependency;
 
@@ -26,6 +27,8 @@ abstract class BaseAuthorizationPair extends Object
 
     abstract public function registrationScenario(RegistrationForm &$registrationForm);
 
+    abstract public function socialRegistrationScenario(RegistrationForm &$registrationForm, BaseClient &$client);
+
     abstract public function credentialsUpdateScenario();
 
     abstract public function registrationFormPartialView();
@@ -41,6 +44,7 @@ abstract class BaseAuthorizationPair extends Object
             'email',
             'checkDNS' => $this->emailCheckDNS,
             'enableIDN' => $this->emailEnableIDN,
+            'skipOnEmpty' => true,
         ];
         $rules['trimEmail'] = [
             [
@@ -74,7 +78,7 @@ abstract class BaseAuthorizationPair extends Object
         return [
             $field,
             function ($attribute) use (&$loginForm) {
-                $user = ModelMapHelper::User();
+                $user = Yii::createObject(ModelMapHelper::User());
                 /** @var LazyCache $cache */
                 $cache = Yii::$app->cache;
                 $value = $loginForm->$attribute;

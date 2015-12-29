@@ -32,4 +32,13 @@ class ModelMapHelper
         $map = self::modelMap();
         return $map['RegistrationForm'];
     }
+
+    /**
+     * @return \DevGroup\Users\models\LoginForm
+     */
+    public static function LoginForm()
+    {
+        $map = self::modelMap();
+        return $map['LoginForm'];
+    }
 }

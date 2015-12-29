@@ -3,7 +3,6 @@
 namespace DevGroup\Users\social;
 
 use DevGroup\ExtensionsManager\models\BaseConfigurationModel;
-use yii\authclient\ClientInterface;
 
 interface SocialServiceInterface
 {
@@ -19,11 +18,7 @@ interface SocialServiceInterface
 
     /**
      * Retrieves additional data from social network and puts it to client.
-     *
-     * @param \yii\authclient\ClientInterface $client
-     *
-     * @return \yii\authclient\ClientInterface
      */
-    public static function retrieveAdditionalData(ClientInterface &$client);
+    public function retrieveAdditionalData();
 
 }

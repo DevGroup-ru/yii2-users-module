@@ -1,12 +1,14 @@
 <?php
 /** @var \yii\web\View $this */
 /** @var \DevGroup\Users\models\RegistrationForm $model */
-/** @var \yii\bootstrap\ActiveForm $form */
+/** @var array $formOptions */
 use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
 
 $registrationChildView = \DevGroup\Users\UsersModule::module()->authorizationScenario()->registrationFormPartialView();
 ?>
 <h1><?= Yii::t('users', 'Registration') ?></h1>
+<?php $form = ActiveForm::begin($formOptions); ?>
 <div class="registration-form__authorization-pair">
   <?=
       $this->render(
@@ -22,7 +24,9 @@ $registrationChildView = \DevGroup\Users\UsersModule::module()->authorizationSce
 if (\DevGroup\Users\UsersModule::module()->enableSocialNetworks === true):
 ?>
 <div class="registration-form__social-networks">
-  <?= \yii\authclient\widgets\AuthChoice::widget() ?>
+  <?= \yii\authclient\widgets\AuthChoice::widget([
+    'baseAuthUrl' => ['/users/auth/social']
+  ]) ?>
 </div>
 <?php
 endif;
@@ -40,3 +44,4 @@ endif;
 
     </div>
 </div>
+<?php ActiveForm::end(); ?>

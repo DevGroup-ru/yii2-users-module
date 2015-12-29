@@ -2,7 +2,6 @@
 
 namespace DevGroup\Users\actions;
 
-use DevGroup\AdminUtils\actions\FormCombinedAction;
 use DevGroup\Users\helpers\ModelMapHelper;
 use DevGroup\Users\models\RegistrationForm;
 use DevGroup\Users\models\User;
@@ -11,7 +10,7 @@ use Yii;
 use yii\bootstrap\ActiveForm;
 use yii\web\Response;
 
-class Registration extends FormCombinedAction
+class Registration extends BaseAction
 {
     /** @var RegistrationForm */
     public $model = null;
@@ -33,39 +32,23 @@ class Registration extends FormCombinedAction
         }
     }
 
-    public function getFooter()
+    public function beforeRun()
     {
-        return '';
-    }
-
-    public function defineParts()
-    {
-        return [
-            'saveData' => [
-                'function' => 'saveData',
-            ],
-            'renderForm' => [
-                'function' => 'renderForm',
-                'type' => 'plain',
-            ],
-        ];
-    }
-
-    public function beforeActionRun()
-    {
-        parent::beforeActionRun();
         $this->model = Yii::createObject(ModelMapHelper::RegistrationForm());
+        return parent::beforeRun();
     }
 
     public function saveData()
     {
-        if (Yii::$app->request->isAjax && $this->model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            // perform AJAX validation
-            return ActiveForm::validate($this->model);
-        }
-
         if ($this->model->load(Yii::$app->request->post())) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                // perform AJAX validation
+                echo ActiveForm::validate($this->model);
+                Yii::$app->end();
+                return '';
+            }
+
             /** @var User|bool $registeredUser */
             $registeredUser = $this->model->register();
             if ($registeredUser !== false) {
@@ -88,13 +71,18 @@ class Registration extends FormCombinedAction
         return '';
     }
 
-    public function renderForm()
+    public function run()
     {
-        return $this->render(
+        $saveResponse = $this->saveData();
+        if ($saveResponse instanceof Response) {
+            return $saveResponse;
+        }
+
+        return $this->controller->render(
             $this->viewFile,
             [
                 'model' => $this->model,
-                'form' => $this->form,
+                'formOptions' => $this->formOptions,
             ]
         );
     }

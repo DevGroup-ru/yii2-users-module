@@ -33,7 +33,7 @@ class m151225_140300_base_tables extends Migration
         );
 
         $this->createIndex('byUser', '{{%user}}', ['username'], true);
-        $this->createIndex('byMail', '{{%user}}', ['email'], true);
+        $this->createIndex('byMail', '{{%user}}', ['email']);
 
         $this->createTable(
             '{{%user_service}}',
@@ -41,7 +41,7 @@ class m151225_140300_base_tables extends Migration
                 'id' => $this->primaryKey(),
                 'user_id' => $this->integer()->notNull(),
                 'social_service_id' => $this->integer()->notNull(),
-                'service_id' => $this->integer()->notNull(),
+                'service_id' => $this->string()->notNull()->defaultValue(''),
             ],
             $tableOptions
         );
@@ -156,6 +156,7 @@ class m151225_140300_base_tables extends Migration
                 'name' => 'Мордокнига',
             ]
         );
+
     }
 
     public function down()

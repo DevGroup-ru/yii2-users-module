@@ -2,10 +2,13 @@
 
 namespace DevGroup\Users\scenarios;
 
+use DevGroup\Users\helpers\PasswordHelper;
 use DevGroup\Users\models\RegistrationForm;
 use DevGroup\Users\models\User;
 use DevGroup\Users\models\LoginForm;
+use DevGroup\Users\UsersModule;
 use Yii;
+use yii\authclient\BaseClient;
 
 class UsernamePassword extends BaseAuthorizationPair
 {
@@ -27,9 +30,13 @@ class UsernamePassword extends BaseAuthorizationPair
                 'required',
             ],
             'findUsername' => $this->findUserByField($loginForm, 'username'),
-            'inactiveUsers' => $this->inactiveUsers($loginForm),
-            'validatePassword' => $this->validatePassword($loginForm),
         ];
+        $inactiveRule = $this->inactiveUsers($loginForm);
+        if (!empty($inactiveRule)) {
+            $rules['inactiveUsers'] = $inactiveRule;
+        }
+        $rules['validatePassword'] = $this->validatePassword($loginForm);
+
 
         return $rules;
     }
@@ -100,6 +107,7 @@ class UsernamePassword extends BaseAuthorizationPair
             'username',
             'password',
             'email',
+            'username_is_temporary',
         ];
     }
 
@@ -112,13 +120,26 @@ class UsernamePassword extends BaseAuthorizationPair
         ];
     }
 
-    public function registrationFormPartialView ()
+    public function registrationFormPartialView()
     {
         return '@vendor/devgroup/yii2-users-module/src/scenarios/views/username-password-registration';
     }
 
-    public function loginFormPartialView ()
+    public function loginFormPartialView()
     {
         return '@vendor/devgroup/yii2-users-module/src/scenarios/views/username-password-login';
+    }
+
+    public function socialRegistrationScenario(RegistrationForm &$registrationForm, BaseClient &$client)
+    {
+        if (empty($registrationForm->username)) {
+            $registrationForm->generateUsername($client->getUserAttributes());
+            $registrationForm->username_is_temporary = true;
+        }
+
+        if (empty($registrationForm->password)) {
+            $registrationForm->password = PasswordHelper::generate(UsersModule::module()->generatedPasswordLength);
+        }
+
     }
 }
