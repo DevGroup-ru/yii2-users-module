@@ -2,6 +2,7 @@
 
 namespace DevGroup\Users\actions;
 
+use DevGroup\Frontend\RedirectHelper;
 use DevGroup\Users\events\SocialAuthEvent;
 use DevGroup\Users\helpers\ModelMapHelper;
 use DevGroup\Users\models\RegistrationForm;
@@ -17,6 +18,7 @@ use yii\authclient\BaseClient;
 use yii\authclient\ClientInterface;
 use yii\base\ErrorException;
 use yii\base\Model;
+use yii\helpers\Url;
 use yii\web\ServerErrorHttpException;
 
 class Social extends AuthAction
@@ -32,6 +34,7 @@ class Social extends AuthAction
         $this->successCallback = Yii::$app->user->getIsGuest()
             ? [$this, 'authenticate']
             : [$this, 'bindSocialNetwork'];
+        $this->successUrl = RedirectHelper::getReturnUrl();
         parent::init();
     }
 
@@ -96,7 +99,31 @@ class Social extends AuthAction
 
             // check if we need to run post-registration
             $user->login(UsersModule::module()->loginDuration);
+
+            // check if there's some required or recommended fields missing
+            foreach (UsersModule::module()->requiredUserAttributes as $attribute) {
+                if (empty($user->$attribute)) {
+                    Yii::$app->session->setFlash('info', Yii::t('users', 'Please fill required profile fields.'));
+                    $this->redirectToProfileUpdate();
+                    return;
+                }
+            }
+            foreach (UsersModule::module()->recommendedUserAttributes as $attribute) {
+                if (empty($user->$attribute)) {
+                    //! @todo Add limitation on UsersModule::recommendedFieldsMaxPrompts
+                    Yii::$app->session->setFlash('info', Yii::t('users', 'Please fill recommended profile fields.'));
+                    $this->redirectToProfileUpdate();
+                    return;
+                }
+            }
         }
+    }
+
+    protected function redirectToProfileUpdate()
+    {
+        $url = ['/users/profile/update'];
+        $url['returnUrl'] = RedirectHelper::getReturnUrl();
+        $this->successUrl = Url::to($url);
     }
 
     public function bindSocialNetwork(ClientInterface $client)

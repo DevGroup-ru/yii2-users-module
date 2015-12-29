@@ -4,11 +4,13 @@
 /** @var array $formOptions */
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use DevGroup\Frontend\RedirectHelper;
 
 $loginChildView = \DevGroup\Users\UsersModule::module()->authorizationScenario()->loginFormPartialView();
 ?>
-    <h1><?= Yii::t('users', 'Login to site') ?></h1>
+<h1><?= Yii::t('users', 'Login to site') ?></h1>
 <?php $form = ActiveForm::begin($formOptions); ?>
+<?= Html::hiddenInput('returnUrl', RedirectHelper::getReturnUrl()) ?>
     <div class="login-form__authorization-pair">
         <?=
         $this->render(
@@ -25,7 +27,7 @@ if (\DevGroup\Users\UsersModule::module()->enableSocialNetworks === true):
     ?>
     <div class="login-form__social-networks">
         <?= \yii\authclient\widgets\AuthChoice::widget([
-            'baseAuthUrl' => ['/users/auth/social']
+            'baseAuthUrl' => ['/users/auth/social', 'returnUrl' => RedirectHelper::getReturnUrl()],
         ]) ?>
     </div>
     <?php

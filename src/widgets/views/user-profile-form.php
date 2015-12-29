@@ -10,10 +10,7 @@ use yii\helpers\Html;
 <?php
 $form = ActiveForm::begin($formOptions);
 
-$returnUrl = Yii::$app->request->get('returnUrl');
-if (empty($returnUrl)) {
-  $returnUrl = \yii\helpers\Url::to();
-}
+$returnUrl = \DevGroup\Frontend\RedirectHelper::getReturnUrl();
 echo Html::hiddenInput('returnUrl', $returnUrl);
 
 

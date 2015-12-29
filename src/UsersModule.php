@@ -68,6 +68,8 @@ class UsersModule extends Module implements BootstrapInterface
 
     public $disabledUserAttributes = [];
 
+    public $recommendedFieldsMaxPrompts = 1;
+
     /**
      * @inheritdoc
      */

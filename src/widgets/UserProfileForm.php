@@ -16,13 +16,13 @@ class UserProfileForm extends Widget
         ],
         'layout' => 'horizontal',
     ];
+    /** @var User */
     public $user = null;
 
     /** @inheritdoc */
     public function run()
     {
         if ($this->user === null) {
-            /** @var User $user */
             $this->user = Yii::$app->user->identity;
             if ($this->user === null) {
                 throw new ServerErrorHttpException("No user identity found");

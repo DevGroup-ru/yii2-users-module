@@ -2,12 +2,12 @@
 
 namespace DevGroup\Users\controllers;
 
+use DevGroup\Frontend\controllers\FrontendController;
 use DevGroup\Users\actions\Profile;
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 
-class ProfileController extends Controller
+class ProfileController extends FrontendController
 {
     /** @inheritdoc */
     public function behaviors()

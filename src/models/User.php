@@ -74,7 +74,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         $module = UsersModule::module();
-        return [
+        $rules = [
             [
                 'phone',
                 'safe',
@@ -121,6 +121,16 @@ class User extends ActiveRecord implements IdentityInterface
                 'filter' => 'boolval',
             ],
         ];
+        if (count(UsersModule::module()->requiredUserAttributes) > 0) {
+            $rules['requiredAttributes'] = [
+                UsersModule::module()->requiredUserAttributes,
+                'required',
+                'on' => self::SCENARIO_PROFILE_UPDATE,
+            ];
+        }
+
+
+        return $rules;
     }
 
     /** @inheritdoc */

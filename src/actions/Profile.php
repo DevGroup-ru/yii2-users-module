@@ -2,6 +2,7 @@
 
 namespace DevGroup\Users\actions;
 
+use DevGroup\Frontend\RedirectHelper;
 use DevGroup\Users\models\User;
 use Yii;
 use yii\web\Response;
@@ -41,7 +42,7 @@ class Profile extends BaseAction
             }
 
             if ($user->save()) {
-                $returnUrl = Yii::$app->request->get('returnUrl');
+                $returnUrl = RedirectHelper::getPostedReturnUrl();
                 if ($returnUrl !== null) {
                     return $this->controller->redirect($returnUrl);
                 } else {
