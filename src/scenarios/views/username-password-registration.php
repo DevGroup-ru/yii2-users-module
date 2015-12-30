@@ -4,5 +4,9 @@
 /** @var \yii\bootstrap\ActiveForm $form */
 ?>
 
-<?= $form->field($model, 'username') ?>
-<?= $form->field($model, 'password') ?>
+<div class="m-form__line">
+    <?= $form->field($model, 'username') ?>
+</div>
+<div class="m-form__line">
+    <?= $form->field($model, 'password') ?>
+</div>

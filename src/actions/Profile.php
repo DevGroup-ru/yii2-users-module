@@ -41,6 +41,10 @@ class Profile extends BaseAction
                 return '';
             }
 
+            if ($user->username_is_temporary && count($user->getDirtyAttributes(['username']))===1) {
+                $user->username_is_temporary = false;
+            }
+
             if ($user->save()) {
                 $returnUrl = RedirectHelper::getPostedReturnUrl();
                 if ($returnUrl !== null) {

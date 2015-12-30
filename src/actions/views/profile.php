@@ -7,6 +7,6 @@
 <?= \dmstr\widgets\Alert::widget() ?>
 <div class="profile-update">
     <?=
-    \DevGroup\Users\widgets\UserProfileForm::widget($profileWidgetOptions)
+    \DevGroup\Users\widgets\UserProfileFormWidget::widget($profileWidgetOptions)
     ?>
 </div>

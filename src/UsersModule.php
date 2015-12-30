@@ -15,6 +15,7 @@ use yii\base\Event;
 use yii\base\Module;
 use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
+use yii\widgets\ActiveField;
 
 class UsersModule extends Module implements BootstrapInterface
 {
@@ -70,18 +71,28 @@ class UsersModule extends Module implements BootstrapInterface
 
     public $recommendedFieldsMaxPrompts = 1;
 
+    protected $defaultRoutes = [
+        '@profile-update' => '/users/profile/update',
+        '@login' => '/users/auth/login',
+        '@social' => '/users/auth/social',
+        '@logout' => '/users/auth/logout',
+        '@registration' => '/users/auth/registration',
+    ];
+
+    public $routes = [];
+
     /**
      * @inheritdoc
      */
     public function bootstrap($app)
     {
         $this->buildModelMap();
+        $this->buildAliases();
 
         $app->i18n->translations['users'] = [
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => __DIR__ . DIRECTORY_SEPARATOR . 'messages',
         ];
-
 
         $app->on(Application::EVENT_BEFORE_REQUEST, function () {
             if ($this->logLastLoginTime === true) {
@@ -94,6 +105,8 @@ class UsersModule extends Module implements BootstrapInterface
             }
         });
 
+        $this->frontendMonsterPatch();
+
     }
 
     /**
@@ -105,6 +118,26 @@ class UsersModule extends Module implements BootstrapInterface
         foreach ($this->modelMap as $modelName => $configuration) {
             Yii::$container->set($configuration['class'], $configuration);
         }
+    }
+
+    /**
+     * Sets needed routes aliases
+     */
+    protected function buildAliases()
+    {
+        $this->routes = ArrayHelper::merge($this->defaultRoutes, $this->routes);
+        foreach ($this->routes as $alias => $route) {
+            Yii::setAlias($alias, $route);
+        }
+    }
+
+    protected function frontendMonsterPatch()
+    {
+        Yii::$container->set(ActiveField::className(), [
+            'options' => [
+                'class' => 'm-form__col',
+            ],
+        ]);
     }
 
     /**

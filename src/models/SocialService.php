@@ -5,6 +5,7 @@ namespace DevGroup\Users\models;
 use DevGroup\AdminUtils\validators\ClassnameValidator;
 use DevGroup\DataStructure\behaviors\PackedJsonAttributes;
 use DevGroup\Multilingual\behaviors\MultilingualActiveRecord;
+use DevGroup\Multilingual\Multilingual;
 use DevGroup\Multilingual\traits\MultilingualTrait;
 use DevGroup\TagDependencyHelper\CacheableActiveRecord;
 use DevGroup\TagDependencyHelper\LazyCache;
@@ -26,6 +27,7 @@ use yii\db\ActiveRecord;
 class SocialService extends ActiveRecord
 {
     public static $classNameToId = [];
+    public static $translatedNameById = [];
 
     use TagDependencyTrait;
     use MultilingualTrait;
@@ -106,5 +108,31 @@ class SocialService extends ActiveRecord
             );
         }
         return intval(static::$classNameToId[$className]);
+    }
+
+    public static function i18nNameById($id)
+    {
+        if (isset(static::$translatedNameById[$id]) === false) {
+
+            /** @var LazyCache $cache */
+            $cache = Yii::$app->cache;
+
+            static::$translatedNameById[$id] = $cache->lazy(
+                function() use ($id) {
+                    /** @var Multilingual $multilingual */
+                    $multilingual = Yii::$app->multilingual;
+                    return SocialServiceTranslation::find()
+                        ->where(['model_id'=>$id, 'language_id' => $multilingual->language_id])
+                        ->select(['name'])
+                        ->scalar();
+                },
+                "SocialService:id2name-i18n:$id",
+                86400,
+                new TagDependency([
+                    'tags' => static::commonTag(),
+                ])
+            );
+        }
+        return empty(static::$translatedNameById[$id]) ? '(not set)' : static::$translatedNameById[$id];
     }
 }

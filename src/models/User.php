@@ -68,6 +68,17 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /** @inheritdoc */
+    public function attributeLabels()
+    {
+        return [
+            'username' => Yii::t('users', 'Username'),
+            'password' => Yii::t('users', 'Password'),
+            'email' => Yii::t('users', 'E-Mail'),
+            'phone' => Yii::t('users', 'Phone'),
+        ];
+    }
+
     /**
      * Validation rules for this model.
      */

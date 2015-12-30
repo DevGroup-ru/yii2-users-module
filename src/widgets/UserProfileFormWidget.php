@@ -7,14 +7,13 @@ use Yii;
 use yii\base\Widget;
 use yii\web\ServerErrorHttpException;
 
-class UserProfileForm extends Widget
+class UserProfileFormWidget extends Widget
 {
     public $viewFile = 'user-profile-form';
     public $formOptions = [
         'options' => [
-            'class' => 'user-profile-form',
+            'class' => 'user-profile-form m-form',
         ],
-        'layout' => 'horizontal',
     ];
     /** @var User */
     public $user = null;
@@ -30,7 +29,7 @@ class UserProfileForm extends Widget
             $this->user->setScenario(User::SCENARIO_PROFILE_UPDATE);
         }
 
-        $this->formOptions['action'] = ['/users/profile/update'];
+        $this->formOptions['action'] = ['@profile-update'];
 
         return $this->render(
             $this->viewFile,

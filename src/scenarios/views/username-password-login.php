@@ -1,9 +1,16 @@
 <?php
 /** @var \yii\web\View $this */
 /** @var \DevGroup\Users\models\RegistrationForm $model */
-/** @var \yii\bootstrap\ActiveForm $form */
+/** @var \yii\widgets\ActiveForm $form */
 ?>
 
-<?= $form->field($model, 'username') ?>
-<?= $form->field($model, 'password') ?>
-<?= $form->field($model, 'rememberMe')->checkbox() ?>
+<div class="m-form__line">
+    <?= $form->field($model, 'username') ?>
+</div>
+<div class="m-form__line">
+    <?= $form->field($model, 'password') ?>
+</div>
+<div class="m-form__line">
+    <?= $form->field($model, 'rememberMe')->checkbox() ?>
+</div>
+

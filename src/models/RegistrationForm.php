@@ -32,6 +32,7 @@ class RegistrationForm extends DynamicModel
     {
         $labels = UsersModule::module()->authorizationScenario()->attributeLabels();
 
+
         return $labels;
     }
 

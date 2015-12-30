@@ -121,7 +121,7 @@ class Social extends AuthAction
 
     protected function redirectToProfileUpdate()
     {
-        $url = ['/users/profile/update'];
+        $url = ['@profile-update'];
         $url['returnUrl'] = RedirectHelper::getReturnUrl();
         $this->successUrl = Url::to($url);
     }

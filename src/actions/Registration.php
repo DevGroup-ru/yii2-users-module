@@ -19,9 +19,8 @@ class Registration extends BaseAction
 
     public $formOptions = [
         'options' => [
-            'class' => 'registration-form',
+            'class' => 'registration-form m-form',
         ],
-        'layout' => 'horizontal',
     ];
 
     public function init()

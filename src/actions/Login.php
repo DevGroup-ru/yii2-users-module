@@ -17,9 +17,8 @@ class Login extends BaseAction
 
     public $formOptions = [
         'options' => [
-            'class' => 'registration-form',
+            'class' => 'login-form m-form',
         ],
-        'layout' => 'horizontal',
     ];
 
     public function init()
