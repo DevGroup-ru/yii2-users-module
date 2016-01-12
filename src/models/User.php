@@ -19,18 +19,18 @@ use yii\web\IdentityInterface;
  *
  * @package DevGroup\Users\models
  * @property integer $id
- * @property string  $username Username
- * @property string  $phone Phone
- * @property string  $email Email
- * @property string  $email_activation_token E-Mail activation token
- * @property string  $password_hash Password hash
- * @property string  $password_reset_token Password reset token with expiration time, null|empty
- * @property string  $auth_key Yii2 auth key
+ * @property string $username Username
+ * @property string $phone Phone
+ * @property string $email Email
+ * @property string $email_activation_token E-Mail activation token
+ * @property string $password_hash Password hash
+ * @property string $password_reset_token Password reset token with expiration time, null|empty
+ * @property string $auth_key Yii2 auth key
  * @property boolean $is_active If user is active/activated his account through email verification link
- * @property string  $created_at
- * @property string  $updated_at
- * @property string  $activated_at
- * @property string  $last_login_at
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $activated_at
+ * @property string $last_login_at
  * @property boolean $username_is_temporary If username is temporary and was generated
  * @property UserService $services
  *
@@ -115,7 +115,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'skipOnEmpty' => true,
                 'on' => self::SCENARIO_PROFILE_UPDATE,
             ],
-            'trimEmail' =>[
+            'trimEmail' => [
                 [
                     'email',
                 ],
@@ -280,6 +280,20 @@ class User extends ActiveRecord implements IdentityInterface
             $this->trigger(User::EVENT_LOGIN);
         }
         return $loginStatus;
+    }
+
+    /**
+     * @param string $newPassword
+     * @return bool
+     */
+    public function changePassword($newPassword)
+    {
+        if ($this->getIsNewRecord() == true) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+        }
+        $this->password_hash = PasswordHelper::hash($newPassword);
+        return $this->save();
+
     }
 
     public function getServices()

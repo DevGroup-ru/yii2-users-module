@@ -13,7 +13,7 @@ class Login extends BaseAction
     /**
      * @var string
      */
-    public $viewFile = '';
+    public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/login';
 
     public $formOptions = [
         'options' => [
@@ -21,13 +21,6 @@ class Login extends BaseAction
         ],
     ];
 
-    public function init()
-    {
-        parent::init();
-        if (empty($this->viewFile)) {
-            $this->viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/login';
-        }
-    }
 
     /**
      * @return array

@@ -3,6 +3,7 @@
 namespace DevGroup\Users\controllers;
 
 use DevGroup\Frontend\controllers\FrontendController;
+use DevGroup\Users\actions\ChangePassword;
 use DevGroup\Users\actions\Profile;
 use Yii;
 use yii\filters\AccessControl;
@@ -15,10 +16,10 @@ class ProfileController extends FrontendController
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['update'],
+                'only' => ['update', 'change-password'],
                 'rules' => [
                     [
-                        'actions' => ['update'],
+                        'actions' => ['update', 'change-password'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -34,7 +35,9 @@ class ProfileController extends FrontendController
             'update' => [
                 'class' => Profile::className(),
             ],
-
+            'change-password' => [
+                'class' => ChangePassword::className(),
+            ],
         ];
     }
 }

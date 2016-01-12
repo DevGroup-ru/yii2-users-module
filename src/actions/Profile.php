@@ -12,15 +12,8 @@ use yii\widgets\ActiveForm;
 class Profile extends BaseAction
 {
     public $profileWidgetOptions = [];
-    public $viewFile = '';
+    public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/profile';
 
-    public function init()
-    {
-        parent::init();
-        if (empty($this->viewFile)) {
-            $this->viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/profile';
-        }
-    }
 
     public function run()
     {
@@ -41,7 +34,7 @@ class Profile extends BaseAction
                 return '';
             }
 
-            if ($user->username_is_temporary && count($user->getDirtyAttributes(['username']))===1) {
+            if ($user->username_is_temporary && count($user->getDirtyAttributes(['username'])) === 1) {
                 $user->username_is_temporary = false;
             }
 
@@ -53,7 +46,7 @@ class Profile extends BaseAction
                     Yii::$app->session->setFlash('success', Yii::t('users', 'Your profile sucessfully updated.'));
                 }
             }
-            
+
 
         }
 
@@ -71,7 +64,7 @@ class Profile extends BaseAction
      */
     public function breadcrumbs()
     {
-        [
+        return [
             [
                 'label' => Yii::t('users', 'Profile update'),
             ]

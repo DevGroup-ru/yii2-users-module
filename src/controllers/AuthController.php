@@ -2,6 +2,7 @@
 
 namespace DevGroup\Users\controllers;
 
+use DevGroup\Frontend\controllers\FrontendController;
 use DevGroup\Users\actions\Login;
 use DevGroup\Users\actions\Logout;
 use DevGroup\Users\actions\Social;
@@ -9,9 +10,8 @@ use DevGroup\Users\actions\Registration;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 
-class AuthController extends Controller
+class AuthController extends FrontendController
 {
     /** @inheritdoc */
     public function behaviors()

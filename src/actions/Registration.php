@@ -15,7 +15,7 @@ class Registration extends BaseAction
     /** @var RegistrationForm */
     public $model = null;
 
-    public $viewFile = null;
+    public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/registration-form';
 
     public $formOptions = [
         'options' => [
@@ -23,13 +23,6 @@ class Registration extends BaseAction
         ],
     ];
 
-    public function init()
-    {
-        parent::init();
-        if ($this->viewFile === null) {
-            $this->viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/registration-form';
-        }
-    }
 
     public function beforeRun()
     {
