@@ -47,7 +47,7 @@ class m160112_124301_clients extends Migration
             '{{%social_service_translation}}',
             [
                 'language_id' => 2,
-                'model_id' => 1,
+                'model_id' => 3,
                 'name' => 'ВКонтакте',
             ]
         );
