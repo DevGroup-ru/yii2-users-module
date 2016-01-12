@@ -32,11 +32,17 @@ class Google extends BaseGoogle implements SocialServiceInterface
     {
 
     }
-    
+
     public function setReturnUrl($returnUrl)
     {
         // google oauth can't redirect with redirectUrl param
         return parent::setReturnUrl(preg_replace('/\\?returnUrl=[^&]*&/s', '?', $returnUrl));
+    }
+
+    protected function defaultReturnUrl()
+    {
+        // google oauth can't redirect with redirectUrl param
+        return preg_replace('/\\?returnUrl=[^&]*&/s', '?', parent::defaultReturnUrl());
     }
 
 }
