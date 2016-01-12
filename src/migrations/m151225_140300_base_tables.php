@@ -165,7 +165,7 @@ class m151225_140300_base_tables extends Migration
             [
                 'language_id' => 2,
                 'model_id' => 1,
-                'name' => 'Мордокнига',
+                'name' => 'Facebook',
             ]
         );
         $this->insert(
@@ -181,7 +181,7 @@ class m151225_140300_base_tables extends Migration
             [
                 'language_id' => 2,
                 'model_id' => 2,
-                'name' => 'Свитер',
+                'name' => 'Твиттер',
             ]
         );
 
