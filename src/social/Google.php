@@ -4,6 +4,7 @@ namespace DevGroup\Users\social;
 
 use DevGroup\ExtensionsManager\models\BaseConfigurationModel;
 use \yii\authclient\clients\GoogleOAuth as BaseGoogle;
+use yii\helpers\Url;
 
 class Google extends BaseGoogle implements SocialServiceInterface
 {
@@ -30,6 +31,12 @@ class Google extends BaseGoogle implements SocialServiceInterface
     public function retrieveAdditionalData()
     {
 
+    }
+    
+    public function setReturnUrl($returnUrl)
+    {
+        // google oauth can't redirect with redirectUrl param
+        return parent::setReturnUrl(preg_replace('/\\?returnUrl=[^&]*&/s', '?', $returnUrl));
     }
 
 }
