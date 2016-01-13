@@ -42,15 +42,13 @@ class ChangePassword extends BaseAction
 
         $model = new ChangePasswordForm();
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->changePassword()) {
                 Yii::$app->session->setFlash('info', Yii::t('users', 'Your password has been changed'));
-                return $this->controller->redirect(Yii::$app->request->url);
+                return $this->controller->refresh();
             }
 
         }
-
-
         return $this->controller->render(
             $this->viewFile,
             [

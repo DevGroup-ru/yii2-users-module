@@ -46,6 +46,7 @@ class User extends ActiveRecord implements IdentityInterface
     const EVENT_LOGIN = 'login';
     const EVENT_SOCIAL_LOGIN = 'event-social-login';
     const EVENT_SOCIAL_BIND = 'event-social-bind';
+    const EVENT_PASSWORD_CHANGE = 'event-password-change';
 
     /** @var string Plain password. Used for model validation. */
     public $password = '';
@@ -291,9 +292,19 @@ class User extends ActiveRecord implements IdentityInterface
         if ($this->getIsNewRecord() == true) {
             throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
+        $this->trigger(User::EVENT_PASSWORD_CHANGE);
         $this->password_hash = PasswordHelper::hash($newPassword);
         return $this->save();
 
+    }
+
+
+    /**
+     * Generates new password reset token
+     */
+    public function generatePasswordResetToken()
+    {
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     public function getServices()

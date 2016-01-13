@@ -5,6 +5,7 @@ namespace DevGroup\Users\controllers;
 use DevGroup\Frontend\controllers\FrontendController;
 use DevGroup\Users\actions\Login;
 use DevGroup\Users\actions\Logout;
+use DevGroup\Users\actions\ResetPassword;
 use DevGroup\Users\actions\Social;
 use DevGroup\Users\actions\Registration;
 use Yii;
@@ -53,6 +54,9 @@ class AuthController extends FrontendController
             'logout' => [
                 'class' => Logout::className(),
             ],
+            'reset-password' => [
+                'class' => ResetPassword::className()
+            ]
         ];
     }
 }

@@ -3,7 +3,10 @@
 namespace DevGroup\Users;
 
 use DevGroup\TagDependencyHelper\LazyCache;
+use DevGroup\Users\actions\ResetPassword;
+use DevGroup\Users\handlers\EmailHandler;
 use DevGroup\Users\helpers\ModelMapHelper;
+use DevGroup\Users\models\ResetPasswordForm;
 use DevGroup\Users\models\SocialService;
 use DevGroup\Users\models\User;
 use DevGroup\Users\scenarios\BaseAuthorizationPair;
@@ -52,6 +55,7 @@ class UsersModule extends Module implements BootstrapInterface
     /** @var int Login duration in seconds, default to 30 days, applies only if remember me is checked */
     public $loginDuration = 2592000;
 
+
     /** @var bool Whether to log last login time */
     public $logLastLoginTime = false;
 
@@ -78,9 +82,24 @@ class UsersModule extends Module implements BootstrapInterface
         '@social' => '/users/auth/social',
         '@logout' => '/users/auth/logout',
         '@registration' => '/users/auth/registration',
+        '@reset-password' => '/users/auth/reset-password',
     ];
 
     public $routes = [];
+
+    protected $defaultHandlers = [
+       'sendMailAfterResetPassword' => [
+            'class' => ResetPasswordForm::class,
+            'event_name' => ResetPasswordForm::EVENT_AFTER_RESET_PASSWORD,
+            'event_handler' => [
+                EmailHandler::class,
+                'sendMailAfterResetPassword'
+            ]
+        ]
+    ];
+
+    public $handlers = [];
+
 
     /**
      * @inheritdoc
@@ -94,6 +113,10 @@ class UsersModule extends Module implements BootstrapInterface
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => __DIR__ . DIRECTORY_SEPARATOR . 'messages',
         ];
+
+        foreach(ArrayHelper::merge($this->defaultHandlers, $this->handlers) as $eventData){
+            Event::on($eventData['class'], $eventData['event_name'], $eventData['event_handler']);
+        }
 
         $app->on(Application::EVENT_BEFORE_REQUEST, function () {
             if ($this->logLastLoginTime === true) {

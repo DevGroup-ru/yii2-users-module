@@ -44,8 +44,19 @@ $loginChildView = \DevGroup\Users\UsersModule::module()->authorizationScenario()
               );
               ?>
             </div>
+            <div class="m-form__col">
+                <?=
+                Html::a(
+                    Yii::t('users', 'Reset password'),
+                    ['@reset-password']
+                );
+                ?>
+            </div>
         </div>
+
+
     </div>
+
 <?php
 if (\DevGroup\Users\UsersModule::module()->enableSocialNetworks === true):
     ?>

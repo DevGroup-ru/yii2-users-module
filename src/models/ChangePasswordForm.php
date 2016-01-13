@@ -14,6 +14,9 @@ use Yii;
 class ChangePasswordForm extends DynamicModel
 {
 
+    const EVENT_BEFORE_PASSWORD_CHANGE = 'event_before_passwod_change';
+    const EVENT_PASSWORD_CHANGE = 'event_password_change';
+
     /**
      * @var string
      */
@@ -50,27 +53,20 @@ class ChangePasswordForm extends DynamicModel
     public function changePassword()
     {
 
-        if ($this->validate()) {
-
-            /** @var User $user */
-            $user = Yii::$app->user->identity;
-            if ($user === null) {
-                throw new ServerErrorHttpException("No user identity found");
-            }
-
-            if (PasswordHelper::validate($this->oldPassword, $user->password_hash) !== true) {
-                $this->addError('oldPassword', Yii::t('users', 'Old Password not valid'));
-                return false;
-            } else {
-                return $user->changePassword($this->newPassword);
-            }
-
-
+        /** @var User $user */
+        $this->trigger(self::EVENT_BEFORE_PASSWORD_CHANGE);
+        $user = Yii::$app->user->identity;
+        if ($user === null) {
+            throw new ServerErrorHttpException("No user identity found");
         }
-
-
+        if (PasswordHelper::validate($this->oldPassword, $user->password_hash) !== true) {
+            $this->addError('oldPassword', Yii::t('users', 'Old Password not valid'));
+            return false;
+        } else {
+            $this->trigger(self::EVENT_PASSWORD_CHANGE);
+            return $user->changePassword($this->newPassword);
+        }
         return false;
-
     }
 
 
