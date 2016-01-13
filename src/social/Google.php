@@ -44,5 +44,16 @@ class Google extends BaseGoogle implements SocialServiceInterface
         // google oauth can't redirect with redirectUrl param
         return preg_replace('/\\?returnUrl=[^&]*&/s', '?', parent::defaultReturnUrl());
     }
+    
+    /** @inheritdoc */
+    protected function normalizeUserAttributes($attributes)
+    {
+        $attributes = parent::normalizeUserAttributes($attributes);
+        if (isset($attributes['emails'][0]['value']) === true) {
+            $attributes['email'] = $attributes['emails'][0]['value'];
+        }
+        $attributes['name'] = $attributes['displayName'];
+        return $attributes;
+    }
 
 }
