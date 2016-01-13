@@ -15,7 +15,7 @@ use yii\helpers\Url;
         [
             'link' => Url::toRoute(
                 [
-                    '/user/user/reset-password',
+                    '@reset-password',
                     'token' => $user->password_reset_token
                 ],
                 true

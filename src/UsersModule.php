@@ -2,21 +2,17 @@
 
 namespace DevGroup\Users;
 
-use DevGroup\TagDependencyHelper\LazyCache;
-use DevGroup\Users\actions\ResetPassword;
+
 use DevGroup\Users\handlers\EmailHandler;
 use DevGroup\Users\helpers\ModelMapHelper;
-use DevGroup\Users\models\ResetPasswordForm;
-use DevGroup\Users\models\SocialService;
+use DevGroup\Users\models\RequestResetPasswordForm;
 use DevGroup\Users\models\User;
 use DevGroup\Users\scenarios\BaseAuthorizationPair;
 use Yii;
-use yii\authclient\Collection;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\base\Event;
 use yii\base\Module;
-use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveField;
 
@@ -55,6 +51,8 @@ class UsersModule extends Module implements BootstrapInterface
     /** @var int Login duration in seconds, default to 30 days, applies only if remember me is checked */
     public $loginDuration = 2592000;
 
+    /** @var int password Reset Token Expire */
+    public $passwordResetTokenExpire = 3600;
 
     /** @var bool Whether to log last login time */
     public $logLastLoginTime = false;
@@ -82,6 +80,7 @@ class UsersModule extends Module implements BootstrapInterface
         '@social' => '/users/auth/social',
         '@logout' => '/users/auth/logout',
         '@registration' => '/users/auth/registration',
+        '@request-reset-password' => '/users/auth/request-reset-password',
         '@reset-password' => '/users/auth/reset-password',
     ];
 
@@ -89,8 +88,8 @@ class UsersModule extends Module implements BootstrapInterface
 
     protected $defaultHandlers = [
        'sendMailAfterResetPassword' => [
-            'class' => ResetPasswordForm::class,
-            'event_name' => ResetPasswordForm::EVENT_AFTER_RESET_PASSWORD,
+            'class' => RequestResetPasswordForm::class,
+            'event_name' => RequestResetPasswordForm::EVENT_AFTER_RESET_PASSWORD,
             'event_handler' => [
                 EmailHandler::class,
                 'sendMailAfterResetPassword'

@@ -13,6 +13,7 @@ return [
     'Phone' => 'Телефон',
     'Registration' => 'Регистрация',
     'Register' => 'Зарегистрироваться',
+    'Hello' => 'Здравствуйте',
     'Profile update' => 'Изменение профиля',
     'Change Password' => 'Изменить пароль',
     'Old Password' => 'Старый пароль',
@@ -20,6 +21,8 @@ return [
     'Confirm Password' => 'Подтверждение пароля',
     'Old Password not valid' => 'Не правильный старый пароль',
     'Your password has been changed' => 'Ваш пароль был изменен',
+    'Reset Password' => 'Сбросить пароль',
+    'Request to reset password' => 'Запрос на сброс пароля',
     'Check your email for further instructions.' => 'Проверьте ваш e-mail для дальнейших инструкций.',
     '<a href="{link}">This</a> is link for reset your password. If you did not request it ignore this letter.' => '<a href="{link}">Эта</a> ссылка для сброса пароля. Если вы не хотите этого, просто проигнорируйте данное сообщение.'
 ];

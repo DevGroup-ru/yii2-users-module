@@ -47,8 +47,8 @@ $loginChildView = \DevGroup\Users\UsersModule::module()->authorizationScenario()
             <div class="m-form__col">
                 <?=
                 Html::a(
-                    Yii::t('users', 'Reset password'),
-                    ['@reset-password']
+                    Yii::t('users', 'Reset Password'),
+                    ['@request-reset-password']
                 );
                 ?>
             </div>

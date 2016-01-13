@@ -64,7 +64,8 @@ class ChangePasswordForm extends DynamicModel
             return false;
         } else {
             $this->trigger(self::EVENT_PASSWORD_CHANGE);
-            return $user->changePassword($this->newPassword);
+            $user->password = $this->newPassword;
+            return $user->changePassword();
         }
         return false;
     }

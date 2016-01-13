@@ -11,8 +11,8 @@ class EmailHandler
     {
 
         if (Yii::$app->has('mailer') && Yii::$app->mailer instanceof \yii\mail\MailerInterface) {
-            Yii::$app->mailer->compose(
-                '@vendor/devgroup/yii2-users-module/src/views/mails/reset-password',
+           Yii::$app->mailer->compose(
+                '@vendor/devgroup/yii2-users-module/src/views/mails/request-reset-password',
                 [
                     'user' => $event->sender->getUser()
                 ]

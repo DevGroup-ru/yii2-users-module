@@ -40,6 +40,7 @@ class User extends ActiveRecord implements IdentityInterface
     use TagDependencyTrait;
 
     const SCENARIO_PROFILE_UPDATE = 'scenario-profile-update';
+    const SCENARIO_PASSWORD_RESET = 'scenario_password_reset';
 
     const EVENT_BEFORE_REGISTER = 'before-register';
     const EVENT_AFTER_REGISTER = 'after-register';
@@ -97,6 +98,13 @@ class User extends ActiveRecord implements IdentityInterface
                 ],
                 'safe',
                 'on' => self::SCENARIO_DEFAULT,
+            ],
+            [
+                [
+                    'password',
+                ],
+                'required',
+                'on' => self::SCENARIO_PASSWORD_RESET,
             ],
             [
                 'username',
@@ -287,17 +295,16 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $newPassword
      * @return bool
      */
-    public function changePassword($newPassword)
+    public function changePassword()
     {
         if ($this->getIsNewRecord() == true) {
             throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
         $this->trigger(User::EVENT_PASSWORD_CHANGE);
-        $this->password_hash = PasswordHelper::hash($newPassword);
+        $this->password_hash = PasswordHelper::hash($this->password);
         return $this->save();
 
     }
-
 
     /**
      * Generates new password reset token
@@ -310,5 +317,44 @@ class User extends ActiveRecord implements IdentityInterface
     public function getServices()
     {
         return $this->hasMany(UserService::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Finds user by password reset token
+     *
+     * @param string $token password reset token
+     * @return static|null
+     */
+    public static function findByPasswordResetToken($token)
+    {
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+        return static::findOne([
+            'password_reset_token' => $token
+        ]);
+    }
+    /**
+     * Finds out if password reset token is valid
+     *
+     * @param string $token password reset token
+     * @return boolean
+     */
+    public static function isPasswordResetTokenValid($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire = UsersModule::module()->passwordResetTokenExpire;
+        return $timestamp + $expire >= time();
+    }
+
+    /**
+     * Removes password reset token
+     */
+    public function removePasswordResetToken()
+    {
+        $this->password_reset_token = '';
     }
 }
