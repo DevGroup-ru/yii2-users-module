@@ -76,6 +76,9 @@ class UsersModule extends Module implements BootstrapInterface
     protected $defaultRoutes = [
         '@profile-update' => '/users/profile/update',
         '@change-password' => '/users/profile/change-password',
+        '@manage-social' => '/users/profile/manage-social',
+        '@add-social' => '/users/profile/add-social',
+        '@delete-social' => '/users/profile/delete-social',
         '@login' => '/users/auth/login',
         '@social' => '/users/auth/social',
         '@logout' => '/users/auth/logout',

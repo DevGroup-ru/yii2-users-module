@@ -12,7 +12,8 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $user_id
  * @property integer $social_service_id
- * @property string  $service_id
+ * @property string $service_id
+ * @property SocialService $socialService
  */
 class UserService extends ActiveRecord
 {
@@ -35,6 +36,9 @@ class UserService extends ActiveRecord
         ];
     }
 
+    /**
+     * @return array
+     */
     public function attributeLabels()
     {
         return [
@@ -42,5 +46,13 @@ class UserService extends ActiveRecord
             'social_service_id' => Yii::t('users', 'Social service'),
             'user_id' => Yii::t('users', 'User ID'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSocialService()
+    {
+        return $this->hasOne(SocialService::className(), ['id' => 'social_service_id']);
     }
 }

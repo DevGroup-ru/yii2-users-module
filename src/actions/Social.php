@@ -19,6 +19,7 @@ use yii\authclient\ClientInterface;
 use yii\base\ErrorException;
 use yii\base\Model;
 use yii\helpers\Url;
+use yii\web\ForbiddenHttpException;
 use yii\web\ServerErrorHttpException;
 
 class Social extends AuthAction
@@ -129,8 +130,7 @@ class Social extends AuthAction
     public function bindSocialNetwork(ClientInterface $client)
     {
         if ($this->userService !== null) {
-            //! @todo add better error screen here
-            throw new \RuntimeException("User with such service already exists");
+            throw new ForbiddenHttpException("User with such service already exists");
         }
 
         /** @var User $user */

@@ -4,12 +4,13 @@ namespace DevGroup\Users\actions;
 
 use DevGroup\Users\models\ChangePasswordForm;
 use Yii;
+use yii\web\ServerErrorHttpException;
 
 class ChangePassword extends BaseAction
 {
 
     public $profileWidgetOptions = [];
-    public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/changePassword';
+    public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/change-password';
 
 
     /**
