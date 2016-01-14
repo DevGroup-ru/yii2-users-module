@@ -8,7 +8,7 @@
     <?= $form->field($model, 'username') ?>
 </div>
 <div class="m-form__line">
-    <?= $form->field($model, 'password') ?>
+    <?= $form->field($model, 'password')->passwordInput() ?>
 </div>
 <div class="m-form__line">
     <?= $form->field($model, 'rememberMe')->checkbox() ?>

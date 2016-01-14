@@ -5,7 +5,6 @@ use yii\helpers\Html;
 /** @var array $profileWidgetOptions */
 
 ?>
-<?= \dmstr\widgets\Alert::widget() ?>
 <div class="profile-update">
     <?=
     \DevGroup\Users\widgets\UserProfileFormWidget::widget($profileWidgetOptions)

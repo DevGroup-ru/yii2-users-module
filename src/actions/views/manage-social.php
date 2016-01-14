@@ -1,6 +1,7 @@
 <?php
 use DevGroup\Frontend\RedirectHelper;
 use DevGroup\Users\widgets\ManageSocialNetworksWidget;
+use yii\helpers\Url;
 
 /**
  * @var array $services;
@@ -11,6 +12,6 @@ use DevGroup\Users\widgets\ManageSocialNetworksWidget;
 
 
 <?= ManageSocialNetworksWidget::widget([
-    'baseAuthUrl' => ['@add-social', 'returnUrl' => RedirectHelper::getReturnUrl()],
+    'baseAuthUrl' => ['@add-social', 'returnUrl' => Url::to(['@manage-social'])],
     'services' => $services
 ]); ?>
