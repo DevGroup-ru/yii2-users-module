@@ -55,8 +55,14 @@ class UsernamePassword extends BaseAuthorizationPair
                 [
                     'username',
                     'password',
+                    'confirmPassword'
                 ],
                 'required',
+            ],
+            'confirmPassword' => [
+                'confirmPassword',
+                'compare',
+                'compareAttribute' => 'password'
             ],
             'uniqueUsername' => [
                 'username',
@@ -108,6 +114,7 @@ class UsernamePassword extends BaseAuthorizationPair
             'password',
             'email',
             'username_is_temporary',
+            'confirmPassword',
         ];
     }
 
@@ -117,6 +124,7 @@ class UsernamePassword extends BaseAuthorizationPair
             'username' => Yii::t('users', 'Username'),
             'password' => Yii::t('users', 'Password'),
             'email' => Yii::t('users', 'E-Mail'),
+            'confirmPassword' => Yii::t('users', 'Confirm Password'),
         ];
     }
 

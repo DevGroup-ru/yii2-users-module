@@ -14,3 +14,6 @@ use DevGroup\Users\UsersModule;
 <div class="m-form__line">
     <?= $form->field($model, 'password')->passwordInput() ?>
 </div>
+<div class="m-form__line">
+    <?= $form->field($model, 'confirmPassword')->passwordInput() ?>
+</div>
