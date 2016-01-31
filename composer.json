@@ -13,8 +13,7 @@
         "devgroup/yii2-frontend-utils": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "phpunit/dbunit": "~1.0"
+        "devgroup/dotplant-dev": "*"
     },
     "autoload": {
         "psr-4": {
