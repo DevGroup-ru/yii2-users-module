@@ -62,7 +62,7 @@ class UsernamePassword extends BaseAuthorizationPair
             'confirmPassword' => [
                 'confirmPassword',
                 'compare',
-                'compareAttribute' => 'password'
+                'compareAttribute' => 'password',
             ],
             'uniqueUsername' => [
                 'username',
@@ -140,6 +140,7 @@ class UsernamePassword extends BaseAuthorizationPair
 
     public function socialRegistrationScenario(RegistrationForm &$registrationForm, BaseClient &$client)
     {
+        $registrationForm->setScenario('socialRegistration');
         if (empty($registrationForm->username)) {
             $registrationForm->generateUsername($client->getUserAttributes());
             $registrationForm->username_is_temporary = true;
@@ -147,6 +148,7 @@ class UsernamePassword extends BaseAuthorizationPair
 
         if (empty($registrationForm->password)) {
             $registrationForm->password = PasswordHelper::generate(UsersModule::module()->generatedPasswordLength);
+            $registrationForm->confirmPassword = $registrationForm->password;
         }
 
     }

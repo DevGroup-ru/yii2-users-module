@@ -44,7 +44,7 @@ class RequestResetPassword extends BaseAction
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->resetPassword()) {
-                Yii::$app->session->setFlash('users', 'Check your email for further instructions.');
+                Yii::$app->session->setFlash('info', Yii::t('users', 'Check your email for further instructions.'));
                 return $this->controller->redirect(['@login']);
             }
         }
