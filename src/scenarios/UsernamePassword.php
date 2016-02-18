@@ -140,7 +140,6 @@ class UsernamePassword extends BaseAuthorizationPair
 
     public function socialRegistrationScenario(RegistrationForm &$registrationForm, BaseClient &$client)
     {
-        $registrationForm->setScenario('socialRegistration');
         if (empty($registrationForm->username)) {
             $registrationForm->generateUsername($client->getUserAttributes());
             $registrationForm->username_is_temporary = true;
