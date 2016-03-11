@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
     ]);
     ?>
     <div class="m-form__line">
-        <?= $form->field($model, 'password'); ?>
+        <?= $form->field($model, 'password')->passwordInput(); ?>
     </div>
     <div class="m-form__line">
         <div class="m-form__col">
