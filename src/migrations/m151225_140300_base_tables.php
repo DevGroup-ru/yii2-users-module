@@ -23,7 +23,7 @@ class m151225_140300_base_tables extends Migration
                 'email' => $this->string()->notNull()->defaultValue(''),
                 'email_activation_token' => $this->string()->notNull()->defaultValue(''),
                 'is_active' => $this->boolean()->notNull()->defaultValue(0),
-                'created_at' => $this->dateTime()->notNull()->defaultExpression('NOW()'),
+                'created_at' => $this->dateTime(),
                 'updated_at' => $this->dateTime(),
                 'activated_at' => $this->dateTime(),
                 'last_login_at' => $this->dateTime(),
