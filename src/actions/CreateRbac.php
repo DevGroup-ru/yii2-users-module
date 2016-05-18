@@ -25,21 +25,20 @@ class CreateRbac extends BaseAdminAction
      * Creates a new AuthItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param $type
+     * @param array $returnUrl
      * @return string|\yii\web\Response
-     * @throws \InvalidArgumentException
      */
-    public function run($type)
+    public function run($type, $returnUrl = ['/users/rbac/index'])
     {
         $rules = ArrayHelper::map(\Yii::$app->getAuthManager()->getRules(), 'name', 'name');
         $model = new AuthItemForm(['isNewRecord' => true]);
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $item = $model->createItem();
-            if (strlen($model->getErrorMessage()) > 0) {
+            if (empty($model->errors) === false) {
                 \Yii::$app->getSession()->setFlash('error', $model->getErrorMessage());
-                return $this->controller->redirect(['update', 'id' => $item->name, 'type' => $item->type]);
+                return $this->controller->redirect(['/users/rbac/update', 'id' => $item->name, 'type' => $item->type]);
             } else {
                 Yii::$app->session->setFlash('success', Yii::t('users', 'Record has been saved'));
-                $returnUrl = Yii::$app->request->get('returnUrl', ['/users/rbac/index']);
                 switch (Yii::$app->request->post('action', 'save')) {
                     case 'next':
                         return $this->controller->redirect(

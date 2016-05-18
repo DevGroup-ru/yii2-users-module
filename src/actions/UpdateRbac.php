@@ -26,10 +26,11 @@ class UpdateRbac extends BaseAdminAction
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param $id
      * @param $type
+     * @param array $returnUrl
      * @return string|Yii\web\Response
      * @throws \InvalidArgumentException
      */
-    public function run($id, $type)
+    public function run($id, $type, $returnUrl = ['/users/rbac/index'])
     {
         $rules = ArrayHelper::map(Yii::$app->getAuthManager()->getRules(), 'name', 'name');
         $model = new AuthItemForm();
@@ -37,9 +38,8 @@ class UpdateRbac extends BaseAdminAction
             $item = $model->updateItem();
             if (strlen($model->getErrorMessage()) > 0) {
                 Yii::$app->getSession()->setFlash('error', $model->getErrorMessage());
-                return $this->controller->redirect(['update', 'id' => $item->name, 'type' => $item->type]);
+                return $this->controller->redirect(['/users/rbac/update', 'id' => $item->name, 'type' => $item->type]);
             } else {
-                $returnUrl = Yii::$app->request->get('returnUrl', ['/users/rbac/index']);
                 switch (Yii::$app->request->post('action', 'save')) {
                     case 'next':
                         return $this->controller->redirect(
