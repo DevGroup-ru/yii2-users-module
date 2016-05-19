@@ -25,6 +25,7 @@ class UserModuleConfiguration extends BaseConfigurationModel
             'enableSocialNetworks',
             'passwordResetTokenExpire',
             'logLastLoginTime',
+            'logLastLoginData',
             'loginDuration',
             'generatedPasswordLength',
         ];
@@ -78,6 +79,7 @@ class UserModuleConfiguration extends BaseConfigurationModel
                     'allowLoginInactiveAccounts' => (bool)$this->allowLoginInactiveAccounts,
                     'enableSocialNetworks' => (bool)$this->enableSocialNetworks,
                     'logLastLoginTime' => (bool)$this->logLastLoginTime,
+                    'logLastLoginData' => (bool)$this->logLastLoginData,
                     'passwordResetTokenExpire' => (int)$this->passwordResetTokenExpire,
                     'loginDuration' => (int)$this->loginDuration,
                     'generatedPasswordLength' => (int)$this->generatedPasswordLength,
@@ -129,6 +131,7 @@ class UserModuleConfiguration extends BaseConfigurationModel
                     'allowLoginInactiveAccounts',
                     'enableSocialNetworks',
                     'logLastLoginTime',
+                    'logLastLoginData'
                 ],
                 'boolean',
                 'trueValue' => true,

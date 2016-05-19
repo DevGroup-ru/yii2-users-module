@@ -10,7 +10,7 @@
 <?= $form->field($model, 'allowLoginInactiveAccounts')->checkbox(); ?>
 <?= $form->field($model, 'enableSocialNetworks')->checkbox(); ?>
 <?= $form->field($model, 'logLastLoginTime')->checkbox(); ?>
-
+<?= $form->field($model, 'logLastLoginData')->checkbox(); ?>
 
 <?= $form->field($model, 'passwordResetTokenExpire'); ?>
 <?= $form->field($model, 'loginDuration'); ?>

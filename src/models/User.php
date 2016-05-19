@@ -2,6 +2,7 @@
 
 namespace DevGroup\Users\models;
 
+use DevGroup\DataStructure\behaviors\PackedJsonAttributes;
 use DevGroup\TagDependencyHelper\CacheableActiveRecord;
 use DevGroup\TagDependencyHelper\TagDependencyTrait;
 use DevGroup\Users\events\RegistrationEvent;
@@ -31,6 +32,7 @@ use yii\web\IdentityInterface;
  * @property string $updated_at
  * @property string $activated_at
  * @property string $last_login_at
+ * @property string $login_data
  * @property boolean $username_is_temporary If username is temporary and was generated
  * @property UserService $services
  *
@@ -57,17 +59,25 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function behaviors()
     {
-        return [
+        $behaviors = [
             'CacheableActiveRecord' => [
-                'class' => CacheableActiveRecord::className(),
+                'class' => CacheableActiveRecord::class,
             ],
             'updateTimestamps' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
             ],
         ];
+
+        if (UsersModule::module()->logLastLoginData === true) {
+            $behaviors['json_attributes'] = [
+                'class' => PackedJsonAttributes::class,
+            ];
+        }
+
+        return $behaviors;
     }
 
     /** @inheritdoc */
@@ -89,7 +99,7 @@ class User extends ActiveRecord implements IdentityInterface
         $module = UsersModule::module();
         $rules = [
             [
-                'phone',
+                ['phone'],
                 'safe',
             ],
             [

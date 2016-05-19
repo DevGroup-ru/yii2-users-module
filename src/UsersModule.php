@@ -57,6 +57,9 @@ class UsersModule extends Module implements BootstrapInterface
     /** @var bool Whether to log last login time */
     public $logLastLoginTime = false;
 
+    /** @var bool Whether to log last login data */
+    public $logLastLoginData = false;
+
     /** @var bool Enable login and registration through social networks */
     public $enableSocialNetworks = true;
 
@@ -90,7 +93,7 @@ class UsersModule extends Module implements BootstrapInterface
     public $routes = [];
 
     protected $defaultHandlers = [
-       'sendMailAfterResetPassword' => [
+        'sendMailAfterResetPassword' => [
             'class' => RequestResetPasswordForm::class,
             'event_name' => RequestResetPasswordForm::EVENT_AFTER_RESET_PASSWORD,
             'event_handler' => [
@@ -121,12 +124,24 @@ class UsersModule extends Module implements BootstrapInterface
         }
 
         $app->on(Application::EVENT_BEFORE_REQUEST, function () {
-            if ($this->logLastLoginTime === true) {
+            if ($this->logLastLoginTime === true || $this->logLastLoginData === true) {
                 Event::on(ModelMapHelper::User()['class'], User::EVENT_LOGIN, function (Event $event) {
                     /** @var User $user */
                     $user = $event->sender;
-                    $user->last_login_at = date('Y-m-d H:i:s');
-                    $user->save(true, ['last_login_at']);
+                    $saveAttributes = [];
+                    if ($this->logLastLoginTime === true) {
+                        $user->last_login_at = date('Y-m-d H:i:s');
+                        $saveAttributes[] = 'last_login_at';
+                    }
+                    if ($this->logLastLoginData === true) {
+                        $user->login_data = [
+                            'ip' => Yii::$app->request->userIP,
+                            'agent' => Yii::$app->request->userAgent,
+                            'host' => Yii::$app->request->userHost
+                        ];
+                        $saveAttributes[] = 'packed_json_login_data';
+                    }
+                    $user->save(true, $saveAttributes);
                 });
             }
         });
