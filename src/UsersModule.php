@@ -116,16 +116,16 @@ class UsersModule extends Module implements BootstrapInterface
             'basePath' => __DIR__ . DIRECTORY_SEPARATOR . 'messages',
         ];
 
-        foreach(ArrayHelper::merge($this->defaultHandlers, $this->handlers) as $eventData){
+        foreach (ArrayHelper::merge($this->defaultHandlers, $this->handlers) as $eventData) {
             Event::on($eventData['class'], $eventData['event_name'], $eventData['event_handler']);
         }
 
         $app->on(Application::EVENT_BEFORE_REQUEST, function () {
             if ($this->logLastLoginTime === true) {
-                Event::on(ModelMapHelper::User(), User::EVENT_LOGIN, function ( Event $event ) {
+                Event::on(ModelMapHelper::User()['class'], User::EVENT_LOGIN, function (Event $event) {
                     /** @var User $user */
                     $user = $event->sender;
-                    $user->last_login_at = time();
+                    $user->last_login_at = date('Y-m-d H:i:s');
                     $user->save(true, ['last_login_at']);
                 });
             }
