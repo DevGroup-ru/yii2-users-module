@@ -11,7 +11,6 @@ use DevGroup\Users\actions\Social;
 use DevGroup\Users\actions\Registration;
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 
 class AuthController extends FrontendController
 {
