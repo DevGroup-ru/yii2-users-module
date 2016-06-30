@@ -27,22 +27,17 @@ use yii\grid\GridView;
         ],
         [
             'attribute' => 'name',
-            'label' => Yii::t('users', 'Name'),
             'options' => [
                 'width' => '30%',
             ],
         ],
-        [
-            'attribute' => 'description',
-            'label' => Yii::t('users', 'Description'),
-        ],
+        'description',
         [
             'attribute' => 'ruleName',
             'visible' => $isRules,
         ],
         [
             'attribute' => 'createdAt',
-            'label' => Yii::t('users', 'Created at'),
             'value' => function ($data) {
                 return date("Y-m-d H:i:s", $data->createdAt);
             },
@@ -52,7 +47,6 @@ use yii\grid\GridView;
         ],
         [
             'attribute' => 'updatedAt',
-            'label' => Yii::t('users', 'Updated at'),
             'value' => function ($data) {
                 return date("Y-m-d H:i:s", $data->updatedAt);
             },

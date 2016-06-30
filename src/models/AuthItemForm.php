@@ -41,29 +41,44 @@ class AuthItemForm extends Model
         ];
     }
 
+    /**
+     * @param $attribute
+     * @param $params
+     */
     public function check($attribute, $params)
     {
-        if (((strlen($this->oldname) == 0) || ($this->oldname != $this->name)) &&
-            ((\Yii::$app->getAuthManager()->getRole($this->$attribute) !== null) ||
-                \Yii::$app->getAuthManager()->getPermission($this->$attribute) !== null)) {
-            $this->addError($attribute, 'Duplicate Item "'.$this->$attribute.'"');
+        $authManager = Yii::$app->getAuthManager();
+        if ((
+                (strlen($this->oldname) == 0)
+                || ($this->oldname != $this->name)
+            ) && (
+                ($authManager->getRole($this->$attribute) !== null)
+                || $authManager->getPermission($this->$attribute) !== null
+            )
+        ) {
+            $this->addError($attribute, Yii::t('users', "Duplicate Item '{name}'", ['name' => $this->$attribute]));
         }
     }
 
+    /**
+     * @return Item
+     */
     public function createItem()
     {
+        $authManager = Yii::$app->getAuthManager();
+        $ruleName = trim($this->ruleName);
         $item = new Item(
             [
                 'name' => $this->name,
                 'type' => $this->type,
                 'description' => $this->description,
-                'ruleName' => trim($this->ruleName) ? trim($this->ruleName) : null,
+                'ruleName' => empty($ruleName) ? null : $ruleName,
             ]
         );
-        Yii::$app->getAuthManager()->add($item);
+        $authManager->add($item);
         foreach ($this->getChildren() as $value) {
             try {
-                Yii::$app->getAuthManager()->addChild($item, new Item(['name' => $value]));
+                $authManager->addChild($item, new Item(['name' => $value]));
             } catch (\Exception $ex) {
                 $this->errorMessage .= Yii::t('users', "Item <strong>{value}</strong> is not assigned:", [
                         'value' => $value,
@@ -80,20 +95,23 @@ class AuthItemForm extends Model
         $item->name = $this->name;
         $item->type = $this->type;
         $item->description = $this->description;
-        $item->ruleName = trim($this->ruleName) ? trim($this->ruleName) : null;
-        Yii::$app->getAuthManager()->update($this->oldname, $item);
-        $children = Yii::$app->getAuthManager()->getChildren($item->name);
+        $authManager = Yii::$app->getAuthManager();
+        $ruleName = trim($this->ruleName);
+        $item->ruleName = empty($ruleName) ? null : $ruleName;
+        $authManager->update($this->oldname, $item);
+        $children = $authManager->getChildren($item->name);
+        $newChildren = $this->getChildren();
         foreach ($children as $value) {
-            $key = array_search($value->name, $this->children);
+            $key = array_search($value->name, $newChildren);
             if ($key === false) {
-                Yii::$app->getAuthManager()->removeChild($item, $value);
+                $authManager->removeChild($item, $value);
             } else {
                 unset($this->children[$key]);
             }
         }
         foreach ($this->getChildren() as $value) {
             try {
-                Yii::$app->getAuthManager()->addChild($item, new Item(['name' => $value]));
+                $authManager->addChild($item, new Item(['name' => $value]));
             } catch (\Exception $ex) {
                 $this->errorMessage .= Yii::t('users', "Item <strong>{value}</strong> is not assigned:", [
                         'value' => $value,
@@ -109,7 +127,7 @@ class AuthItemForm extends Model
      */
     public function getChildren()
     {
-        return empty($this->children) === false ? (array) $this->children : [];
+        return empty($this->children) === false ? (array)$this->children : [];
     }
 
     public function getErrorMessage()

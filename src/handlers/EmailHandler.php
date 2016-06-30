@@ -18,7 +18,7 @@ class EmailHandler
                 ]
             )->setTo($event->sender->getUser()->email)
                 ->setFrom(Yii::$app->params['adminEmail'])
-                ->setSubject(Yii::t('users', 'Reset password'))
+                ->setSubject(Yii::t('users', 'Reset Password'))
                 ->send();
         }
     }

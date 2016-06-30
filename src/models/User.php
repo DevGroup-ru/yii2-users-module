@@ -88,6 +88,17 @@ class User extends ActiveRecord implements IdentityInterface
             'password' => Yii::t('users', 'Password'),
             'email' => Yii::t('users', 'E-Mail'),
             'phone' => Yii::t('users', 'Phone'),
+            'email_activation_token' => Yii::t('users', 'Activation Token'),
+            'password_hash' => Yii::t('users', 'Password Hash'),
+            'password_reset_token' => Yii::t('users', 'Password Reset Token'),
+            'auth_key' => Yii::t('users', 'Auth Key'),
+            'is_active' => Yii::t('users', 'User Is Active'),
+            'activated_at' => Yii::t('users', 'Activated At'),
+            'last_login_at' => Yii::t('users', 'Last Login At'),
+            'login_data' => Yii::t('users', 'Login Data'),
+            'username_is_temporary' => Yii::t('users', 'User Is Temporary'),
+            'created_at' => Yii::t('users', 'Created at'),
+            'updated_at' => Yii::t('users', 'Updated at'),
         ];
     }
 
@@ -344,6 +355,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password_reset_token' => $token
         ]);
     }
+
     /**
      * Finds out if password reset token is valid
      *
@@ -355,7 +367,7 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($token)) {
             return false;
         }
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = UsersModule::module()->passwordResetTokenExpire;
         return $timestamp + $expire >= time();
     }

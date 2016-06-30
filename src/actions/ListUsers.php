@@ -8,21 +8,21 @@ use DevGroup\Users\models\User;
 use yii\data\ActiveDataProvider;
 use Yii;
 
-class ManageUsers extends BaseAdminAction
+/**
+ * Class ListUsers
+ *
+ * @package DevGroup\Users\actions
+ */
+class ListUsers extends BaseAdminAction
 {
-
-    public $viewFile = 'manage-users';
+   public $viewFile = 'list-users';
 
     /**
      * @return array
      */
     public function breadcrumbs()
     {
-        return [
-            [
-                'label' => Yii::t('users', 'Manage users'),
-            ]
-        ];
+        return [['label' => Yii::t('users', 'List users')]];
     }
 
     /**
@@ -30,15 +30,13 @@ class ManageUsers extends BaseAdminAction
      */
     public function title()
     {
-        return Yii::t('users', 'Manage users');
+        return Yii::t('users', 'List users');
     }
 
 
     public function run()
     {
-        /***
-         * @var $model User
-         */
+        /** @var $model User */
         $model = Yii::createObject(ModelMapHelper::User());
         $dataProvider = new ActiveDataProvider([
             'query' => $model::find(),
@@ -48,6 +46,4 @@ class ManageUsers extends BaseAdminAction
         ]);
         return $this->render(['dataProvider' => $dataProvider]);
     }
-
-
 }

@@ -4,10 +4,10 @@ namespace DevGroup\Users\actions;
 
 use DevGroup\AdminUtils\actions\BaseAdminAction;
 use DevGroup\Users\models\AuthItemForm;
-use yii\helpers\ArrayHelper;
 use Yii;
-use yii\helpers\Url;
 use yii\rbac\Item;
+use yii\rbac\ManagerInterface;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class UpdateRbac
@@ -22,99 +22,115 @@ class UpdateRbac extends BaseAdminAction
     public $viewFile = 'update';
 
     /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param $id
-     * @param $type
+     * Updates or creates RBAC Item
+     * Type of item depends of given type
+     *
+     * @param null | string $id
+     * @param int $type
      * @param array $returnUrl
-     * @return string|Yii\web\Response
-     * @throws \InvalidArgumentException
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      */
-    public function run($id, $type, $returnUrl = ['/users/rbac/index'])
+    public function run($id = null, $type, $returnUrl = ['/users/rbac/index'])
     {
-        $rules = ArrayHelper::map(Yii::$app->getAuthManager()->getRules(), 'name', 'name');
-        $model = new AuthItemForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $item = $model->updateItem();
-            if (strlen($model->getErrorMessage()) > 0) {
-                Yii::$app->getSession()->setFlash('error', $model->getErrorMessage());
-                return $this->controller->redirect(['/users/rbac/update', 'id' => $item->name, 'type' => $item->type]);
-            } else {
-                switch (Yii::$app->request->post('action', 'save')) {
-                    case 'next':
-                        return $this->controller->redirect(
-                            [
-                                '/users/rbac/create',
-                                'type' => $type,
-                                'returnUrl' => $returnUrl,
-                            ]
-                        );
-                    case 'back':
-                        return $this->controller->redirect($returnUrl);
-                    default:
-                        return $this->controller->redirect(
-                            Url::toRoute(
-                                [
-                                    '/users/rbac/update',
-                                    'id' => $item->name,
-                                    'type' => $type,
-                                    'returnUrl' => $returnUrl,
-                                ]
-                            )
-                        );
-                }
-            }
-        } else {
+        $roleText = Yii::t('users', 'Role');
+        $repmText = Yii::t('users', 'Permission');
+        $modelName = ($type == 1) ? $roleText : $repmText;
+        $authManager = Yii::$app->getAuthManager();
+        if (null !== $id) {
+            $model = new AuthItemForm();
             switch ($type) {
                 case Item::TYPE_PERMISSION:
-                    $item = Yii::$app->getAuthManager()->getPermission($id);
-                    $items = ArrayHelper::map(
-                        Yii::$app->getAuthManager()->getPermissions(),
-                        'name',
-                        function ($item) {
-                            return $item->name .
-                            (strlen($item->description) > 0 ? ' [' . $item->description . ']' : '');
-                        }
-                    );
+                    $item = $authManager->getPermission($id);
                     break;
                 case Item::TYPE_ROLE:
-                    $item = Yii::$app->getAuthManager()->getRole($id);
-                    $items = ArrayHelper::map(
-                        ArrayHelper::merge(
-                            Yii::$app->getAuthManager()->getPermissions(),
-                            Yii::$app->getAuthManager()->getRoles()
-                        ),
-                        'name',
-                        function ($item) {
-                            return $item->name .
-                            (strlen($item->description) > 0 ? ' [' . $item->description . ']' : '');
-                        },
-                        function ($item) {
-                            return Item::TYPE_ROLE;
-                        }
-                    );
+                    $item = $authManager->getRole($id);
                     break;
                 default:
-                    throw new \InvalidArgumentException('Unexpected item type');
+                    throw new \InvalidArgumentException(Yii::t('users', 'Unexpected RBAC Item type'));
             }
-            $children = Yii::$app->getAuthManager()->getChildren($id);
-            $selected = [];
-            foreach ($children as $child) {
-                $selected[] = $child->name;
+            if (null === $item) {
+                throw new NotFoundHttpException(
+                    Yii::t('users', "{model} with id :'{id}' not found!", [
+                        'model' => Yii::t('users', 'RBAC Item'),
+                        'id' => $id
+                    ])
+                );
             }
+            $children = $authManager->getChildren($id);
+            $selected = array_keys($children);
             $model->name = $item->name;
             $model->oldname = $item->name;
             $model->type = $item->type;
             $model->description = $item->description;
             $model->ruleName = $item->ruleName;
-            return $this->render(
-                [
-                    'model' => $model,
-                    'rules' => $rules,
-                    'children' => $selected,
-                    'items' => $items,
-                ]
-            );
+            $model->children = $selected;
+            $actionName = "updateItem";
+        } else {
+            if (true === in_array($type, [Item::TYPE_ROLE, Item::TYPE_PERMISSION])) {
+                $model = new AuthItemForm(['isNewRecord' => true]);
+                $model->type = $type;
+            } else {
+                throw new \InvalidArgumentException(Yii::t('users', 'Unexpected RBAC Item type'));
+            }
+            $actionName = "createItem";
         }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $item = call_user_func([$model, $actionName]);
+            if (false === empty($model->errors)) {
+                Yii::$app->getSession()->setFlash('error', $model->getErrorMessage());
+            } else {
+                Yii::$app->getSession()->setFlash('success',
+                    Yii::t('users', '{model} successfully saved!', ['model' => $modelName])
+                );
+            }
+            return $this->controller->redirect(['/users/rbac/update', 'id' => $item->name, 'type' => $item->type]);
+        }
+
+        return $this->render(
+            [
+                'model' => $model,
+                'items' => self::getItems($type, $id, $authManager),
+            ]
+        );
+    }
+
+    /**
+     * @param int $type
+     * @param string $id
+     * @param ManagerInterface $authManager
+     * @return array
+     */
+    private static function getItems($type, $id, $authManager)
+    {
+        $items = [];
+        switch ($type) {
+            case Item::TYPE_PERMISSION:
+                $items = self::prepareItems($authManager->getPermissions(), $id);
+                break;
+            case Item::TYPE_ROLE:
+                $items[Yii::t('users', 'Permissions')] = self::prepareItems($authManager->getPermissions(), $id);
+                $items[Yii::t('users', 'Roles')] = self::prepareItems($authManager->getRoles(), $id);
+                break;
+        }
+        return $items;
+    }
+
+    /**
+     * @param Item[] $data
+     * @param string $id
+     * @return array
+     */
+    public static function prepareItems($data, $id)
+    {
+        $items = [];
+        foreach ($data as $name => $role) {
+            if ($name == $id) {
+                continue;
+            }
+            $items[$name] = $name . (empty($role->description) ? '' : " [{$role->description}] ");
+        }
+        return $items;
     }
 }

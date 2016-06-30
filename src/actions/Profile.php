@@ -43,7 +43,7 @@ class Profile extends BaseAction
                 if ($returnUrl !== null) {
                     return $this->controller->redirect($returnUrl);
                 } else {
-                    Yii::$app->session->setFlash('success', Yii::t('users', 'Your profile sucessfully updated.'));
+                    Yii::$app->session->setFlash('success', Yii::t('users', 'Your profile successfully updated.'));
                 }
             }
 
