@@ -3,7 +3,7 @@
 namespace DevGroup\Users\social;
 
 use DevGroup\ExtensionsManager\models\BaseConfigurationModel;
-use \yii\authclient\clients\GoogleOAuth as BaseGoogle;
+use \yii\authclient\clients\Google as BaseGoogle;
 use yii\helpers\Url;
 
 class Google extends BaseGoogle implements SocialServiceInterface
