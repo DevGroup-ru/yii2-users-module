@@ -29,7 +29,5 @@ class Facebook extends BaseFacebook implements SocialServiceInterface
      */
     public function retrieveAdditionalData()
     {
-
     }
-
 }

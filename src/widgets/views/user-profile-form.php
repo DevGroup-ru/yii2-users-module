@@ -59,14 +59,14 @@ foreach ($attributes as $attribute => $changeOnlyOnce) {
 ?>
   <div class="m-form__line">
     <div class="m-form__col">
-      <?= Html::submitButton(
-          (
-          Yii::t('users', 'Save')
-          ),
-          [
+        <?= Html::submitButton(
+            (
+            Yii::t('users', 'Save')
+            ),
+            [
               'class' => 'btn-blue g--btn-full profile-form__save-button',
-          ]
-      ); ?>
+            ]
+        ); ?>
     </div>
   </div>
 

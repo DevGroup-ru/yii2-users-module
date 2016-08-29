@@ -4,6 +4,7 @@ namespace DevGroup\Users\models;
 
 use yii\base\DynamicModel;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class RequestResetPasswordForm extends DynamicModel
 {
@@ -41,7 +42,7 @@ class RequestResetPasswordForm extends DynamicModel
         /** @var User $user */
         $this->user = User::findOne(['email' => $this->email]);
         if ($this->user === null) {
-            throw new ServerErrorHttpException("No user identity found");
+            throw new NotFoundHttpException(Yii::t('users', 'No user identity found'));
         }
 
         $this->trigger(self::EVENT_BEFORE_RESET_PASSWORD);
@@ -53,5 +54,4 @@ class RequestResetPasswordForm extends DynamicModel
 
         return false;
     }
-
 }

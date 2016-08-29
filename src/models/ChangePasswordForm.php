@@ -6,9 +6,11 @@ use DevGroup\Users\helpers\PasswordHelper;
 use DevGroup\Users\UsersModule;
 use yii\base\DynamicModel;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class ChangePasswordForm
+ *
  * @package DevGroup\Users\models
  */
 class ChangePasswordForm extends DynamicModel
@@ -45,19 +47,29 @@ class ChangePasswordForm extends DynamicModel
                 'string',
                 'min' => UsersModule::module()->authorizationScenario()->minPasswordLength
             ],
+            [
+                'newPassword',
+                'compare',
+                'compareAttribute' => 'oldPassword',
+                'operator' => '!=',
+                'message' => Yii::t('users', 'New password must not be equal to old!')
+            ],
             [['confirmPassword'], 'compare', 'compareAttribute' => 'newPassword']
         ];
     }
 
 
+    /**
+     * @return bool
+     * @throws NotFoundHttpException
+     */
     public function changePassword()
     {
-
         /** @var User $user */
         $this->trigger(self::EVENT_BEFORE_PASSWORD_CHANGE);
         $user = Yii::$app->user->identity;
         if ($user === null) {
-            throw new ServerErrorHttpException("No user identity found");
+            throw new NotFoundHttpException(Yii::t('users', 'No user identity found'));
         }
         if (PasswordHelper::validate($this->oldPassword, $user->password_hash) !== true) {
             $this->addError('oldPassword', Yii::t('users', 'Old Password not valid'));
@@ -67,7 +79,6 @@ class ChangePasswordForm extends DynamicModel
             $user->password = $this->newPassword;
             return $user->changePassword();
         }
-        return false;
     }
 
 
@@ -80,5 +91,4 @@ class ChangePasswordForm extends DynamicModel
             'confirmPassword' => Yii::t('users', 'Confirm Password'),
         ];
     }
-
 }

@@ -149,6 +149,5 @@ class UsernamePassword extends BaseAuthorizationPair
             $registrationForm->password = PasswordHelper::generate(UsersModule::module()->generatedPasswordLength);
             $registrationForm->confirmPassword = $registrationForm->password;
         }
-
     }
 }

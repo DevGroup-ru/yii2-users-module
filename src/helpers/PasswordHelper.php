@@ -38,6 +38,7 @@ class PasswordHelper
     {
         return Yii::$app->security->validatePassword($password, $hash);
     }
+
     /**
      * Generates user-friendly random password containing at least one lower case letter, one uppercase letter and one
      * digit. The remaining characters in the password are chosen at random from those three sets.

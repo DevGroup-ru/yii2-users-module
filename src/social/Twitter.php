@@ -29,7 +29,5 @@ class Twitter extends BaseTwitter implements SocialServiceInterface
      */
     public function retrieveAdditionalData()
     {
-
     }
-
 }

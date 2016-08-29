@@ -11,6 +11,11 @@ use DevGroup\Users\actions\Social;
 use Yii;
 use yii\filters\AccessControl;
 
+/**
+ * Class ProfileController
+ *
+ * @package DevGroup\Users\controllers
+ */
 class ProfileController extends FrontendController
 {
     /** @inheritdoc */
@@ -18,7 +23,7 @@ class ProfileController extends FrontendController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['update', 'change-password'],
                 'rules' => [
                     [
@@ -36,19 +41,19 @@ class ProfileController extends FrontendController
     {
         return [
             'update' => [
-                'class' => Profile::className(),
+                'class' => Profile::class,
             ],
             'change-password' => [
-                'class' => ChangePassword::className(),
+                'class' => ChangePassword::class,
             ],
             'manage-social' => [
-                'class' => ManageSocial::className()
+                'class' => ManageSocial::class
             ],
             'add-social' => [
-                'class' => Social::className()
+                'class' => Social::class
             ],
             'delete-social' => [
-                'class' => DeleteSocial::className()
+                'class' => DeleteSocial::class
             ]
         ];
     }

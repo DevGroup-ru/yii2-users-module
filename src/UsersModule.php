@@ -2,7 +2,6 @@
 
 namespace DevGroup\Users;
 
-
 use DevGroup\Users\handlers\EmailHandler;
 use DevGroup\Users\helpers\ModelMapHelper;
 use DevGroup\Users\models\RequestResetPasswordForm;
@@ -33,8 +32,7 @@ class UsersModule extends Module implements BootstrapInterface
     public $modelMap = [];
 
     public $authorizationScenario = [
-        'class' => 'DevGroup\Users\scenarios\UsernamePassword',
-    ];
+        'class' => 'DevGroup\Users\scenarios\UsernamePassword',    ];
 
     /** @var BaseAuthorizationPair Authorization scenario class instance */
     private $authorizationScenarioInstance = null;
@@ -147,7 +145,6 @@ class UsersModule extends Module implements BootstrapInterface
         });
 
         $this->frontendMonsterPatch();
-
     }
 
     /**

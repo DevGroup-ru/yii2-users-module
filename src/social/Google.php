@@ -30,7 +30,6 @@ class Google extends BaseGoogle implements SocialServiceInterface
      */
     public function retrieveAdditionalData()
     {
-
     }
 
     public function setReturnUrl($returnUrl)
@@ -55,5 +54,4 @@ class Google extends BaseGoogle implements SocialServiceInterface
         $attributes['name'] = $attributes['displayName'];
         return $attributes;
     }
-
 }

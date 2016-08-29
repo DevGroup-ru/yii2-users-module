@@ -17,7 +17,6 @@ class SocialNetworksWidget extends AuthChoice
     {
         echo Html::beginTag('div', ['class' => 'social-login']);
         foreach ($this->getClients() as $externalService) {
-
             $socialServiceId = SocialService::classNameToId(get_class($externalService));
             $i18n = SocialService::i18nNameById($socialServiceId);
             $this->clientLink(
@@ -29,7 +28,6 @@ class SocialNetworksWidget extends AuthChoice
                     'title' => $i18n,
                 ]
             );
-
         }
         echo Html::endTag('ul');
     }

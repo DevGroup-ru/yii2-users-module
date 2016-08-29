@@ -3,9 +3,16 @@
 namespace DevGroup\Users\actions;
 
 use DevGroup\Users\models\ChangePasswordForm;
+use DevGroup\Users\models\User;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
+/**
+ * Class ChangePassword
+ *
+ * @package DevGroup\Users\actions
+ */
 class ChangePassword extends BaseAction
 {
 
@@ -33,22 +40,29 @@ class ChangePassword extends BaseAction
         return Yii::t('users', 'Change Password');
     }
 
-    public function run()
+    /**
+     * @param string $returnUrl
+     * @return string|\yii\web\Response
+     * @throws ServerErrorHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
+    public function run($returnUrl = '')
     {
         /** @var User $user */
         $user = Yii::$app->user->identity;
         if ($user === null) {
-            throw new ServerErrorHttpException("No user identity found");
+            throw new NotFoundHttpException(Yii::t('users', 'No user identity found'));
         }
-
         $model = new ChangePasswordForm();
-
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->changePassword()) {
                 Yii::$app->session->setFlash('info', Yii::t('users', 'Your password has been changed'));
-                return $this->controller->refresh();
+                if (true === empty($returnUrl)) {
+                    return $this->controller->refresh();
+                } else {
+                    return $this->controller->redirect($returnUrl);
+                }
             }
-
         }
         return $this->controller->render(
             $this->viewFile,
@@ -57,5 +71,4 @@ class ChangePassword extends BaseAction
             ]
         );
     }
-
 }

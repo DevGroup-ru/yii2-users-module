@@ -7,6 +7,7 @@ use Yii;
 
 /**
  * Class ResetPassword
+ *
  * @package DevGroup\Users\actions
  */
 class RequestResetPassword extends BaseAction
@@ -15,6 +16,7 @@ class RequestResetPassword extends BaseAction
      * @var string
      */
     public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/request-reset-password';
+
     /**
      * @return array
      */
@@ -48,8 +50,6 @@ class RequestResetPassword extends BaseAction
                 return $this->controller->redirect(['@login']);
             }
         }
-
         return $this->controller->render($this->viewFile, ['model' => $model]);
     }
-
 }

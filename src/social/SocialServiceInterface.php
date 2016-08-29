@@ -20,5 +20,4 @@ interface SocialServiceInterface
      * Retrieves additional data from social network and puts it to client.
      */
     public function retrieveAdditionalData();
-
 }

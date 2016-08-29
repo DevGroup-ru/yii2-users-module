@@ -4,7 +4,13 @@ namespace DevGroup\Users\widgets;
 
 use DevGroup\Users\models\ChangePasswordForm;
 use yii\base\Widget;
+use Yii;
 
+/**
+ * Class UserChangePasswordFormWidget
+ *
+ * @package DevGroup\Users\widgets
+ */
 class UserChangePasswordFormWidget extends Widget
 {
     public $viewFile = 'user-change-password';
@@ -20,9 +26,12 @@ class UserChangePasswordFormWidget extends Widget
     /** @inheritdoc */
     public function run()
     {
-
-        $this->formOptions['action'] = ['@change-password'];
-
+        $returnUrl = Yii::$app->request->get('returnUrl', '');
+        $changePassRoute = ['@change-password'];
+        if (false === empty($returnUrl)) {
+            $changePassRoute['returnUrl'] = $returnUrl;
+        }
+        $this->formOptions['action'] = $changePassRoute;
         return $this->render(
             $this->viewFile,
             [
@@ -31,7 +40,4 @@ class UserChangePasswordFormWidget extends Widget
             ]
         );
     }
-
-
-
 }

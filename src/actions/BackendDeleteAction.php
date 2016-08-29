@@ -25,7 +25,7 @@ use yii\web\NotFoundHttpException;
  *
  * @package DevGroup\Users\actions
  */
-class DeleteAction extends BaseAdminAction
+class BackendDeleteAction extends BaseAdminAction
 {
     /** @var  ActiveRecord */
     public $modelClass;
@@ -60,11 +60,13 @@ class DeleteAction extends BaseAdminAction
             );
         }
         if (false !== $model->delete()) {
-            Yii::$app->session->setFlash('info',
+            Yii::$app->session->setFlash(
+                'info',
                 Yii::t('users', '{model} successfully removed.', ['model' => Yii::t('users', 'User')])
             );
         } else {
-            Yii::$app->session->setFlash('error',
+            Yii::$app->session->setFlash(
+                'error',
                 Yii::t('users', 'There was an errors: {errors}, while deleting {model}.', [
                     'errors' => implode(', ', $model->errors),
                     'model' => Yii::t('users', 'User')

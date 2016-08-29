@@ -184,7 +184,6 @@ class m151225_140300_base_tables extends Migration
                 'name' => 'Твиттер',
             ]
         );
-
     }
 
     public function down()
@@ -195,7 +194,5 @@ class m151225_140300_base_tables extends Migration
         $this->dropTable('{{%user_service}}');
         $this->dropTable('{{%user}}');
         $this->dropTable('{{%social_service}}');
-
-
     }
 }

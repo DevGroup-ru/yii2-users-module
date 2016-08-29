@@ -5,15 +5,17 @@
  * @var AuthItemForm $model
  * @var array $items
  * @var array $children
+ * @var string $permName
  */
 
 use DevGroup\Users\models\AuthItemForm;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\rbac\Item;
 
 $isNewRecord = isset($isNewRecord) && $isNewRecord;
-$modelName = ($model->type == 1) ? Yii::t('users', 'Role') : Yii::t('users', 'Permission');
+$modelName = ($model->type == Item::TYPE_ROLE) ? Yii::t('users', 'Role') : Yii::t('users', 'Permission');
 $this->title = $model->isNewRecord ? Yii::t('users', 'Create') : Yii::t('users', 'Update');
 $this->title .= ' ' . $modelName;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('users', 'Rbac'), 'url' => ['index']];
@@ -44,10 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="btn-group pull-right" role="group" aria-label="Edit buttons">
                         <?= Html::a(
                             Yii::t('users', 'Back'),
-                            Yii::$app->request->get('returnUrl', ['index']),
+                            ['/users/rbac-manage/index', 'type' => $model->type],
                             ['class' => 'btn btn-danger']
                         ) ?>
-                        <?= Html::submitButton(Yii::t('users', 'Save'), ['class' => 'btn btn-primary']) ?>
+                        <?php if (true === Yii::$app->user->can($permName)) : ?>
+                            <?= Html::submitButton(Yii::t('users', 'Save'), ['class' => 'btn btn-primary']) ?>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php ActiveForm::end(); ?>

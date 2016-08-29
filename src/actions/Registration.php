@@ -10,6 +10,11 @@ use Yii;
 use yii\bootstrap\ActiveForm;
 use yii\web\Response;
 
+/**
+ * Class Registration
+ *
+ * @package DevGroup\Users\actions
+ */
 class Registration extends BaseAction
 {
     /** @var RegistrationForm */
@@ -24,12 +29,19 @@ class Registration extends BaseAction
     ];
 
 
+    /**
+     * @inheritdoc
+     */
     public function beforeRun()
     {
         $this->model = Yii::createObject(ModelMapHelper::RegistrationForm());
         return parent::beforeRun();
     }
 
+    /**
+     * @return string|Response
+     * @throws \yii\base\ExitException
+     */
     public function saveData()
     {
         if ($this->model->load(Yii::$app->request->post())) {
@@ -50,7 +62,6 @@ class Registration extends BaseAction
                 if ($module->emailConfirmationNeeded === true && $registeredUser->is_active) {
                     $shouldLogin = true;
                 }
-
                 if ($shouldLogin && $registeredUser->login(UsersModule::module()->loginDuration)) {
                     $returnUrl = Yii::$app->request->get('returnUrl');
                     if ($returnUrl !== null) {
@@ -63,13 +74,15 @@ class Registration extends BaseAction
         return '';
     }
 
+    /**
+     * @return string|Response
+     */
     public function run()
     {
         $saveResponse = $this->saveData();
         if ($saveResponse instanceof Response) {
             return $saveResponse;
         }
-
         return $this->controller->render(
             $this->viewFile,
             [
@@ -79,6 +92,9 @@ class Registration extends BaseAction
         );
     }
 
+    /**
+     * @inheritdoc
+     */
     public function breadcrumbs()
     {
         return [
@@ -88,6 +104,9 @@ class Registration extends BaseAction
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function title()
     {
         return Yii::t('users', 'Registration');

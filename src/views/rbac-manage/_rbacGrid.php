@@ -20,7 +20,7 @@ use yii\grid\GridView;
     'summaryOptions' => ['class' => 'summary col-md-12 dataTables_info'],
     'columns' => [
         [
-            'class' => CheckboxColumn::className(),
+            'class' => CheckboxColumn::class,
             'options' => [
                 'width' => '10px',
             ],
@@ -61,7 +61,7 @@ use yii\grid\GridView;
             ],
             'buttons' => [
                 [
-                    'url' => 'update',
+                    'url' => 'edit',
                     'icon' => 'pencil',
                     'class' => 'btn-primary',
                     'label' => Yii::t('users', 'Edit'),
@@ -71,6 +71,9 @@ use yii\grid\GridView;
                     'icon' => 'trash-o',
                     'class' => 'btn-danger',
                     'label' => Yii::t('users', 'Delete'),
+                    'options' => [
+                        'data-action' => 'delete'
+                    ],
                 ],
             ],
             'appendUrlParams' => [
@@ -81,5 +84,5 @@ use yii\grid\GridView;
     'tableOptions' => [
         'class' => 'table table-bordered table-hover dataTable',
     ]
-]); ?>
+]);
 

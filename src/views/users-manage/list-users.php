@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $buttons = Html::a(
     Icon::show('plus') . '&nbsp'
     . Yii::t('users', 'New user'),
-    ['/users/manage/edit', 'returnUrl' => \DevGroup\AdminUtils\Helper::returnUrl()],
+    ['/users/users-manage/edit', 'returnUrl' => \DevGroup\AdminUtils\Helper::returnUrl()],
     ['class' => 'btn btn-success']
 );
 $gridTpl = <<<TPL

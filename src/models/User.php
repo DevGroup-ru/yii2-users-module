@@ -34,6 +34,7 @@ use yii\web\IdentityInterface;
  * @property string $last_login_at
  * @property string $login_data
  * @property boolean $username_is_temporary If username is temporary and was generated
+ * @property boolean $password_is_temporary Whether password must be changed after first login
  * @property UserService $services
  *
  */
@@ -42,7 +43,7 @@ class User extends ActiveRecord implements IdentityInterface
     use TagDependencyTrait;
 
     const SCENARIO_PROFILE_UPDATE = 'scenario-profile-update';
-    const SCENARIO_PASSWORD_RESET = 'scenario_password_reset';
+    const SCENARIO_PASSWORD_RESET = 'scenario-password-reset';
 
     const EVENT_BEFORE_REGISTER = 'before-register';
     const EVENT_AFTER_REGISTER = 'after-register';
@@ -97,6 +98,7 @@ class User extends ActiveRecord implements IdentityInterface
             'last_login_at' => Yii::t('users', 'Last Login At'),
             'login_data' => Yii::t('users', 'Login Data'),
             'username_is_temporary' => Yii::t('users', 'User Is Temporary'),
+            'password_is_temporary' => Yii::t('users', 'Password Is Temporary'),
             'created_at' => Yii::t('users', 'Created at'),
             'updated_at' => Yii::t('users', 'Updated at'),
         ];
@@ -156,6 +158,7 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 [
                     'username_is_temporary',
+                    'password_is_temporary',
                     'is_active',
                 ],
                 'filter',
@@ -313,18 +316,17 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @param string $newPassword
      * @return bool
      */
     public function changePassword()
     {
         if ($this->getIsNewRecord() == true) {
-            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" non existing user');
         }
         $this->trigger(User::EVENT_PASSWORD_CHANGE);
+        $this->password_is_temporary = 0;
         $this->password_hash = PasswordHelper::hash($this->password);
         return $this->save();
-
     }
 
     /**

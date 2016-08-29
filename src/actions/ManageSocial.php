@@ -4,8 +4,14 @@ namespace DevGroup\Users\actions;
 
 use DevGroup\Users\models\User;
 use Yii;
+use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
+/**
+ * Class ManageSocial
+ *
+ * @package DevGroup\Users\actions
+ */
 class ManageSocial extends BaseAction
 {
     public $viewFile = '@vendor/devgroup/yii2-users-module/src/actions/views/manage-social';
@@ -35,18 +41,16 @@ class ManageSocial extends BaseAction
         /** @var User $user */
         $user = Yii::$app->user->identity;
         if ($user === null) {
-            throw new ServerErrorHttpException("No user identity found");
+            throw new NotFoundHttpException(Yii::t('users', 'No user identity found'));
         }
-
         $services = array_reduce(
             $user->services,
             function ($arr, $i) {
-                $arr[$i->socialService->class_name] =  $i;
+                $arr[$i->socialService->class_name] = $i;
                 return $arr;
             },
             []
         );
-
         return $this->controller->render($this->viewFile, ['services' => $services]);
     }
 }

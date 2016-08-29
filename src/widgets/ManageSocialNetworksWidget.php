@@ -6,7 +6,6 @@ use DevGroup\Users\models\SocialService;
 use yii\helpers\Html;
 use Yii;
 
-
 class ManageSocialNetworksWidget extends SocialNetworksWidget
 {
 
@@ -40,7 +39,6 @@ class ManageSocialNetworksWidget extends SocialNetworksWidget
         echo Html::endTag('div');
 
         echo Html::tag('div', '', ['class' => 'clearfix']);
-
     }
 
     /**

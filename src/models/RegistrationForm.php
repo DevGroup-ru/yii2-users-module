@@ -128,6 +128,5 @@ class RegistrationForm extends DynamicModel
             $this->username = 'user' . ++$row['id'];
         }
         return $this->username;
-
     }
 }

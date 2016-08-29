@@ -7,6 +7,11 @@ use Yii;
 use yii\base\Widget;
 use yii\web\ServerErrorHttpException;
 
+/**
+ * Class UserProfileFormWidget
+ *
+ * @package DevGroup\Users\widgets
+ */
 class UserProfileFormWidget extends Widget
 {
     public $viewFile = 'user-profile-form';
@@ -15,6 +20,7 @@ class UserProfileFormWidget extends Widget
             'class' => 'user-profile-form m-form',
         ],
     ];
+
     /** @var User */
     public $user = null;
 

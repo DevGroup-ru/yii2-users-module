@@ -5,6 +5,11 @@ namespace DevGroup\Users\helpers;
 use DevGroup\Users\UsersModule;
 use Yii;
 
+/**
+ * Class ModelMapHelper
+ *
+ * @package DevGroup\Users\helpers
+ */
 class ModelMapHelper
 {
     /**

@@ -20,8 +20,13 @@ use yii\base\ErrorException;
 use yii\base\Model;
 use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
-use yii\web\ServerErrorHttpException;
+use yii\web\NotFoundHttpException;
 
+/**
+ * Class Social
+ *
+ * @package DevGroup\Users\actions
+ */
 class Social extends AuthAction
 {
     protected $socialServiceId = null;
@@ -30,6 +35,9 @@ class Social extends AuthAction
     /** @var UserService */
     protected $userService = null;
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         $this->successCallback = Yii::$app->user->getIsGuest()
@@ -39,13 +47,16 @@ class Social extends AuthAction
         parent::init();
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function authSuccess($client)
     {
         /** @var \yii\authclient\BaseClient $client */
         $this->socialServiceId = SocialService::classNameToId($client->className());
 
         if ($this->socialServiceId === 0) {
-            throw new ServerErrorHttpException("SocialService unknown");
+            throw new NotFoundHttpException(Yii::t('users', 'SocialService unknown'));
         }
 
         // first find user service on this id
@@ -66,6 +77,13 @@ class Social extends AuthAction
         return parent::authSuccess($client);
     }
 
+    /**
+     * @param ClientInterface $client
+     * @throws ErrorException
+     * @throws \Exception
+     * @throws \yii\base\InvalidConfigException
+     * @throws bool
+     */
     public function authenticate(ClientInterface $client)
     {
         // find existing user by service
@@ -89,12 +107,18 @@ class Social extends AuthAction
             $user = $registrationForm->socialRegister($client);
 
             if ($user === false) {
-                throw new ErrorException("Unable to register user");
+                throw new ErrorException(Yii::t('users', 'Unable to register user'));
             }
 
             $userService = $this->createService();
             if ($user->save() === false) {
-                throw new ErrorException("Unable to save user:" . var_export($user->errors, true));
+                throw new ErrorException(Yii::t(
+                    'users',
+                    'Unable to save user: {why}',
+                    [
+                    'why' => var_export($user->errors, true)
+                    ]
+                ));
             }
             $user->link('services', $userService);
 
@@ -127,10 +151,15 @@ class Social extends AuthAction
         $this->successUrl = Url::to($url);
     }
 
+
+    /**
+     * @param ClientInterface $client
+     * @throws ForbiddenHttpException
+     */
     public function bindSocialNetwork(ClientInterface $client)
     {
         if ($this->userService !== null) {
-            throw new ForbiddenHttpException("User with such service already exists");
+            throw new ForbiddenHttpException(Yii::t('users', 'User with such service already exists'));
         }
 
         /** @var User $user */
@@ -144,9 +173,11 @@ class Social extends AuthAction
         $event->userService = &$userService;
 
         $user->trigger(User::EVENT_SOCIAL_BIND, $event);
-
     }
 
+    /**
+     * @return UserService
+     */
     private function createService()
     {
         $userService = new UserService();
@@ -155,6 +186,10 @@ class Social extends AuthAction
         return $userService;
     }
 
+    /**
+     * @param BaseClient $client
+     * @param Model $model
+     */
     protected function mapServiceAttributes(BaseClient &$client, Model &$model)
     {
         $clientUserAttributes = $client->getUserAttributes();

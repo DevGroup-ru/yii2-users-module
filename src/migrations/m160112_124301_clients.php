@@ -67,7 +67,6 @@ class m160112_124301_clients extends Migration
                 'name' => 'Google+',
             ]
         );
-
     }
 
     public function down()
@@ -77,7 +76,5 @@ class m160112_124301_clients extends Migration
         $this->delete('{{%social_service_translation}}', ['model_id'=>4]);
         $this->delete('{{%social_service}}', ['id'=>3]);
         $this->delete('{{%social_service}}', ['id'=>4]);
-
-
     }
 }

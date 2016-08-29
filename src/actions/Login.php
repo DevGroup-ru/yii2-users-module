@@ -8,6 +8,11 @@ use Yii;
 use yii\bootstrap\ActiveForm;
 use yii\web\Response;
 
+/**
+ * Class Login
+ *
+ * @package DevGroup\Users\actions
+ */
 class Login extends BaseAction
 {
     /**
@@ -21,11 +26,10 @@ class Login extends BaseAction
         ],
     ];
 
-
     /**
      * @return array
      */
-    public function breadcrumbs ()
+    public function breadcrumbs()
     {
         return [
             [
@@ -48,12 +52,13 @@ class Login extends BaseAction
                 return '';
             }
             if ($model->login()) {
-                $returnUrl = Yii::$app->request->get('returnUrl');
-                if ($returnUrl !== null) {
-                    return $this->controller->redirect($returnUrl);
-                } else {
-                    return $this->controller->goBack();
+                $returnUrl = Yii::$app->getUser()->getReturnUrl();
+                if (true === (bool)$model->user->password_is_temporary) {
+                    return $this->controller->redirect(
+                        ['/users/profile/change-password', 'returnUrl' => $returnUrl]
+                    );
                 }
+                return $this->controller->redirect($returnUrl);
             }
         }
         return $this->controller->render(
@@ -68,7 +73,7 @@ class Login extends BaseAction
     /**
      * @return string
      */
-    public function title ()
+    public function title()
     {
         return Yii::t('users', 'Login to site');
     }

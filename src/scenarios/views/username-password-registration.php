@@ -6,7 +6,7 @@ use DevGroup\Users\UsersModule;
 /** @var \yii\bootstrap\ActiveForm $form */
 ?>
 
-<?php foreach (UsersModule::module()->requiredUserAttributes as $attribute): ?>
+<?php foreach (UsersModule::module()->requiredUserAttributes as $attribute) : ?>
     <div class="m-form__line">
         <?= $form->field($model, $attribute); ?>
     </div>

@@ -39,13 +39,13 @@ class SocialService extends ActiveRecord
     {
         return [
             'json_attributes' => [
-                'class' => PackedJsonAttributes::className(),
+                'class' => PackedJsonAttributes::class,
             ],
             'CacheableActiveRecord' => [
-                'class' => CacheableActiveRecord::className(),
+                'class' => CacheableActiveRecord::class,
             ],
             'multilingual' => [
-                'class' => MultilingualActiveRecord::className(),
+                'class' => MultilingualActiveRecord::class,
                 'translationPublishedAttribute' => false,
             ],
         ];
@@ -69,7 +69,7 @@ class SocialService extends ActiveRecord
             [['sort_order'], 'integer'],
             [
                 ['class_name'],
-                ClassnameValidator::className(),
+                ClassnameValidator::class,
             ],
         ];
     }
@@ -94,7 +94,7 @@ class SocialService extends ActiveRecord
             $cache = Yii::$app->cache;
 
             static::$classNameToId[$className] = $cache->lazy(
-                function() use ($className) {
+                function () use ($className) {
                     return static::find()
                         ->where(['class_name'=>$className])
                         ->select(['id'])
@@ -118,7 +118,7 @@ class SocialService extends ActiveRecord
             $cache = Yii::$app->cache;
 
             static::$translatedNameById[$id] = $cache->lazy(
-                function() use ($id) {
+                function () use ($id) {
                     /** @var Multilingual $multilingual */
                     $multilingual = Yii::$app->multilingual;
                     return SocialServiceTranslation::find()

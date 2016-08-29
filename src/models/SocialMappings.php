@@ -73,7 +73,7 @@ class SocialMappings extends ActiveRecord
         /** @var LazyCache $cache */
         $cache = Yii::$app->cache;
         $map = $cache->lazy(
-            function () use($id) {
+            function () use ($id) {
                 return static::find()
                     ->where(['social_service_id' => $id])
                     ->indexBy('model_attribute')

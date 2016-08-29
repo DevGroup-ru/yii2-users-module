@@ -34,5 +34,4 @@ class ResetPasswordForm extends DynamicModel
             'newPassword' => Yii::t('users', 'New Password'),
         ];
     }
-
 }

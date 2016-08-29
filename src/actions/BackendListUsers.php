@@ -13,27 +13,17 @@ use Yii;
  *
  * @package DevGroup\Users\actions
  */
-class ListUsers extends BaseAdminAction
+class BackendListUsers extends BaseAdminAction
 {
-   public $viewFile = 'list-users';
-
     /**
-     * @return array
+     * @var string
      */
-    public function breadcrumbs()
-    {
-        return [['label' => Yii::t('users', 'List users')]];
-    }
+    public $viewFile = 'list-users';
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
-    public function title()
-    {
-        return Yii::t('users', 'List users');
-    }
-
-
     public function run()
     {
         /** @var $model User */

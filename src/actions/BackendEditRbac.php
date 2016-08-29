@@ -5,21 +5,23 @@ namespace DevGroup\Users\actions;
 use DevGroup\AdminUtils\actions\BaseAdminAction;
 use DevGroup\Users\models\AuthItemForm;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\rbac\Item;
 use yii\rbac\ManagerInterface;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 /**
  * Class UpdateRbac
  * @package DevGroup\Users\actions
  */
-class UpdateRbac extends BaseAdminAction
+class BackendEditRbac extends BaseAdminAction
 {
 
     /**
      * @var string
      */
-    public $viewFile = 'update';
+    public $viewFile = 'edit-rbac-item';
 
     /**
      * Updates or creates RBAC Item
@@ -27,15 +29,21 @@ class UpdateRbac extends BaseAdminAction
      *
      * @param null | string $id
      * @param int $type
-     * @param array $returnUrl
      * @return string|\yii\web\Response
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
-    public function run($id = null, $type, $returnUrl = ['/users/rbac/index'])
+    public function run($id = null, $type)
     {
         $roleText = Yii::t('users', 'Role');
-        $repmText = Yii::t('users', 'Permission');
-        $modelName = ($type == 1) ? $roleText : $repmText;
+        $permText = Yii::t('users', 'Permission');
+        if ($type == Item::TYPE_ROLE) {
+            $modelName = $roleText;
+            $permName = 'users-role-edit';
+        } else {
+            $modelName = $permText;
+            $permName = 'users-permission-edit';
+        }
         $authManager = Yii::$app->getAuthManager();
         if (null !== $id) {
             $model = new AuthItemForm();
@@ -47,7 +55,7 @@ class UpdateRbac extends BaseAdminAction
                     $item = $authManager->getRole($id);
                     break;
                 default:
-                    throw new \InvalidArgumentException(Yii::t('users', 'Unexpected RBAC Item type'));
+                    throw new InvalidParamException(Yii::t('users', 'Unexpected RBAC Item type'));
             }
             if (null === $item) {
                 throw new NotFoundHttpException(
@@ -71,26 +79,34 @@ class UpdateRbac extends BaseAdminAction
                 $model = new AuthItemForm(['isNewRecord' => true]);
                 $model->type = $type;
             } else {
-                throw new \InvalidArgumentException(Yii::t('users', 'Unexpected RBAC Item type'));
+                throw new InvalidParamException(Yii::t('users', 'Unexpected RBAC Item type'));
             }
             $actionName = "createItem";
         }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        $post = Yii::$app->request->post();
+        if (false === empty($post) && false === Yii::$app->user->can($permName)) {
+            throw new ForbiddenHttpException(Yii::t(
+                'yii',
+                'You are not allowed to perform this action.'
+            ));
+        }
+        if ($model->load($post) && $model->validate()) {
             $item = call_user_func([$model, $actionName]);
             if (false === empty($model->errors)) {
                 Yii::$app->getSession()->setFlash('error', $model->getErrorMessage());
             } else {
-                Yii::$app->getSession()->setFlash('success',
+                Yii::$app->getSession()->setFlash(
+                    'success',
                     Yii::t('users', '{model} successfully saved!', ['model' => $modelName])
                 );
             }
-            return $this->controller->redirect(['/users/rbac/update', 'id' => $item->name, 'type' => $item->type]);
+            return $this->controller->redirect(['/users/rbac-manage/edit', 'id' => $item->name, 'type' => $item->type]);
         }
 
         return $this->render(
             [
                 'model' => $model,
+                'permName' => $permName,
                 'items' => self::getItems($type, $id, $authManager),
             ]
         );

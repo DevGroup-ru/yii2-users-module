@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+
 /** @var \yii\web\View $this */
 /** @var \DevGroup\Users\models\User $user */
 /** @var array $profileWidgetOptions */

@@ -19,7 +19,7 @@ class AuthController extends FrontendController
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['logout'],
                 'rules' => [
                     [
@@ -37,22 +37,22 @@ class AuthController extends FrontendController
     {
         return [
             'registration' => [
-                'class' => Registration::className(),
+                'class' => Registration::class,
             ],
             'social' => [
-                'class' => Social::className(),
+                'class' => Social::class,
             ],
             'login' => [
-                'class' => Login::className(),
+                'class' => Login::class,
             ],
             'logout' => [
-                'class' => Logout::className(),
+                'class' => Logout::class,
             ],
             'request-reset-password' => [
-                'class' => RequestResetPassword::className()
+                'class' => RequestResetPassword::class
             ],
             'reset-password' => [
-                'class' => ResetPassword::className()
+                'class' => ResetPassword::class
             ]
         ];
     }

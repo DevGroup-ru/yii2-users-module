@@ -29,7 +29,5 @@ class VKontakte extends BaseVKontakte implements SocialServiceInterface
      */
     public function retrieveAdditionalData()
     {
-
     }
-
 }
