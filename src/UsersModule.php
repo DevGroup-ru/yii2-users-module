@@ -180,11 +180,15 @@ class UsersModule extends Module implements BootstrapInterface
     }
 
     /**
-     * @return UsersModule Module instance in application
+     * @return self Module instance in application
      */
     public static function module()
     {
-        return Yii::$app->getModule('users');
+        $module = Yii::$app->getModule('users');
+        if ($module === null) {
+            $module = $module = Yii::createObject(self::class, ['users']);
+        }
+        return $module;
     }
 
     /**

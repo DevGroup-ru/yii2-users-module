@@ -11,32 +11,13 @@ use DevGroup\Users\UsersModule;
  */
 class UserModuleConfiguration extends BaseConfigurationModel
 {
-
-
     /**
-     * @param array $config
+     * @inheritdoc
      */
-    public function __construct($config = [])
+    public function getModuleClassName()
     {
-        $attributes = [
-
-            'emailConfirmationNeeded',
-            'allowLoginInactiveAccounts',
-            'enableSocialNetworks',
-            'passwordResetTokenExpire',
-            'logLastLoginTime',
-            'logLastLoginData',
-            'loginDuration',
-            'generatedPasswordLength',
-        ];
-
-        parent::__construct($attributes, $config);
-        $module = UsersModule::module();
-        foreach ($attributes as $attribute) {
-            $this->{$attribute} = $module->{$attribute};
-        }
+        return UsersModule::className();
     }
-
 
     /**
      * Returns array of module configuration that should be stored in application config.
