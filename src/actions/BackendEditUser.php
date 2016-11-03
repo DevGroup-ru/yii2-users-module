@@ -80,15 +80,17 @@ class BackendEditUser extends BaseAdminAction
             if (true === $model->load($post) && true === $model->validate()) {
                 $attributes = $model->attributes;
                 unset($attributes['id']);
-                if (isset($post["User"]) && !empty($post["User"])) {
-                    $attributes = array_merge($attributes, $post["User"]);
-                }
                 $user->setAttributes($attributes);
                 if (true === $user->getIsNewRecord()) {
                     $res = $user->register();
                 } else {
                     $user->scenario = $userClass::SCENARIO_PROFILE_UPDATE;
                     $res = $user->save();
+                    if (isset($post["User"]) && !empty($post["User"])) {
+                        $users = [User::find()->where(["id" => $user->id])->one()];
+                        $users[0]->setAttributes($post["User"]);
+                        PropertiesHelper::storeValues($users);
+                    }
                 }
                 if (false !== $res) {
                     if ($assignments != $assignedNames) {
