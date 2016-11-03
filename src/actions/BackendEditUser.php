@@ -10,6 +10,7 @@ use Yii;
 use yii\rbac\Item;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use DevGroup\DataStructure\helpers\PropertiesHelper;
 
 /**
  * Class BackendEditUser
@@ -47,6 +48,7 @@ class BackendEditUser extends BaseAdminAction
             ),
             true
         );
+        $user->autoSaveProperties = true;
         $model = new BackendCreateForm();
         if (false === $user->getIsNewRecord()) {
             $model->setAttributes($user->attributes);
@@ -78,6 +80,9 @@ class BackendEditUser extends BaseAdminAction
             if (true === $model->load($post) && true === $model->validate()) {
                 $attributes = $model->attributes;
                 unset($attributes['id']);
+                if (isset($post["User"]) && !empty($post["User"])) {
+                    $attributes = array_merge($attributes, $post["User"]);
+                }
                 $user->setAttributes($attributes);
                 if (true === $user->getIsNewRecord()) {
                     $res = $user->register();

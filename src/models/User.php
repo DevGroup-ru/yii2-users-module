@@ -75,7 +75,7 @@ class User extends ActiveRecord implements IdentityInterface
             ],
             'properties' => [
                 'class' => HasProperties::class,
-                'autoFetchProperties' => true,
+                'autoFetchProperties' => false,
             ],
         ];
 
