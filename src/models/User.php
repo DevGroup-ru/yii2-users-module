@@ -3,8 +3,10 @@
 namespace DevGroup\Users\models;
 
 use DevGroup\DataStructure\behaviors\PackedJsonAttributes;
+use DevGroup\DataStructure\behaviors\HasProperties;
 use DevGroup\TagDependencyHelper\CacheableActiveRecord;
 use DevGroup\TagDependencyHelper\TagDependencyTrait;
+use DevGroup\DataStructure\traits\PropertiesTrait;
 use DevGroup\Users\events\RegistrationEvent;
 use DevGroup\Users\helpers\PasswordHelper;
 use DevGroup\Users\UsersModule;
@@ -41,6 +43,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     use TagDependencyTrait;
+    use PropertiesTrait;
 
     const SCENARIO_PROFILE_UPDATE = 'scenario-profile-update';
     const SCENARIO_PASSWORD_RESET = 'scenario-password-reset';
@@ -69,6 +72,10 @@ class User extends ActiveRecord implements IdentityInterface
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
+            ],
+            'properties' => [
+                'class' => HasProperties::class,
+                'autoFetchProperties' => true,
             ],
         ];
 
@@ -163,8 +170,12 @@ class User extends ActiveRecord implements IdentityInterface
                 ],
                 'filter',
                 'filter' => 'boolval',
-            ],
+            ]
         ];
+        $property_rules = $this->propertiesRules();
+        if (!empty($property_rules)) {
+            $rules = array_merge($rules, $property_rules);
+        }
         if (count(UsersModule::module()->requiredUserAttributes) > 0) {
             $rules['requiredAttributes'] = [
                 UsersModule::module()->requiredUserAttributes,
