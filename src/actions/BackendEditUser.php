@@ -102,7 +102,7 @@ class BackendEditUser extends BaseAdminAction
                                 $currentRoles[] = $role->name;
                                 $event = new RoleEvent();
                                 $event->role = $role;
-                                $user->trigger('')
+                                $user->trigger(User::EVENT_ROLE_ADDED, $event);
                             } else {
                                 Yii::$app->session->setFlash(
                                     'warning',
