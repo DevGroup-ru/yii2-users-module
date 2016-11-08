@@ -10,6 +10,7 @@ use Yii;
 use yii\rbac\Item;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use DevGroup\DataStructure\helpers\PropertiesHelper;
 
 /**
  * Class BackendEditUser
@@ -47,6 +48,7 @@ class BackendEditUser extends BaseAdminAction
             ),
             true
         );
+        $user->autoSaveProperties = true;
         $model = new BackendCreateForm();
         if (false === $user->getIsNewRecord()) {
             $model->setAttributes($user->attributes);
@@ -84,6 +86,11 @@ class BackendEditUser extends BaseAdminAction
                 } else {
                     $user->scenario = $userClass::SCENARIO_PROFILE_UPDATE;
                     $res = $user->save();
+                    if (isset($post['User']) && !empty($post['User'])) {
+                        $users = [User::find()->where(['id' => $user->id])->one()];
+                        $users[0]->setAttributes($post['User']);
+                        PropertiesHelper::storeValues($users);
+                    }
                 }
                 if (false !== $res) {
                     if ($assignments != $assignedNames) {
