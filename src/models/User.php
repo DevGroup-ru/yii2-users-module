@@ -54,6 +54,7 @@ class User extends ActiveRecord implements IdentityInterface
     const EVENT_SOCIAL_LOGIN = 'event-social-login';
     const EVENT_SOCIAL_BIND = 'event-social-bind';
     const EVENT_PASSWORD_CHANGE = 'event-password-change';
+    const EVENT_ROLE_ADDED = 'event-role-added';
 
     /** @var string Plain password. Used for model validation. */
     public $password = '';

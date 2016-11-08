@@ -3,6 +3,7 @@
 namespace DevGroup\Users\actions;
 
 use DevGroup\AdminUtils\actions\BaseAdminAction;
+use DevGroup\Users\events\RoleEvent;
 use DevGroup\Users\helpers\ModelMapHelper;
 use DevGroup\Users\models\BackendCreateForm;
 use DevGroup\Users\models\User;
@@ -99,6 +100,9 @@ class BackendEditUser extends BaseAdminAction
                             if (null !== $role = $authManager->getRole($newName)) {
                                 $authManager->assign($role, $user->id);
                                 $currentRoles[] = $role->name;
+                                $event = new RoleEvent();
+                                $event->role = $role;
+                                $user->trigger('')
                             } else {
                                 Yii::$app->session->setFlash(
                                     'warning',
