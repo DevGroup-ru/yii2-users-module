@@ -86,9 +86,9 @@ class BackendEditUser extends BaseAdminAction
                 } else {
                     $user->scenario = $userClass::SCENARIO_PROFILE_UPDATE;
                     $res = $user->save();
-                    if (isset($post["User"]) && !empty($post["User"])) {
-                        $users = [User::find()->where(["id" => $user->id])->one()];
-                        $users[0]->setAttributes($post["User"]);
+                    if (isset($post['User']) && !empty($post['User'])) {
+                        $users = [User::find()->where(['id' => $user->id])->one()];
+                        $users[0]->setAttributes($post['User']);
                         PropertiesHelper::storeValues($users);
                     }
                 }
