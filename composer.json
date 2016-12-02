@@ -7,8 +7,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.5",
-        "yiisoft/yii2": "^2.0.6",
-        "devgroup/yii2-tag-dependency-helper": "^1.3.0",
+        "yiisoft/yii2": "~2.0.6",
+        "devgroup/yii2-tag-dependency-helper": "~1.5",
         "devgroup/yii2-data-structure-tools": "*",
         "devgroup/yii2-admin-utils": "dev-master",
         "devgroup/yii2-frontend-utils": "dev-master",
