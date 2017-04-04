@@ -72,7 +72,16 @@ class RegistrationForm extends DynamicModel
 
         $user->setAttributes($this->attributes);
 
-        return $user->register();
+        $result = $user->register();
+        if ($user->hasErrors()) {
+            foreach ($user->errors as $attribute => $errors) {
+                foreach ($errors as $error) {
+                    $this->addError($attribute, $error);
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function socialRegister(BaseClient &$client)
