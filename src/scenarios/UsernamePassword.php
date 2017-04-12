@@ -75,7 +75,7 @@ class UsernamePassword extends BaseAuthorizationPair
                 'username',
                 'string',
                 'min' => 3,
-                'max' => 18,
+                'max' => 255,
             ],
         ];
 

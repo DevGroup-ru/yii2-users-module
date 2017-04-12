@@ -54,7 +54,7 @@ class BackendCreateForm extends Model
             [['password', 'confirmPassword'], 'required', 'on' => self::SCENARIO_BACKEND_USER_CREATE],
             ['username', 'filter', 'filter' => 'trim'],
             ['confirmPassword', 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false],
-            ['username', 'string', 'min' => 3, 'max' => 18],
+            ['username', 'string', 'min' => 3, 'max' => 255],
             ['password', 'string', 'min' => UsersModule::module()->authorizationScenario()->minPasswordLength],
             [['phone', 'id'], 'safe'],
             [
